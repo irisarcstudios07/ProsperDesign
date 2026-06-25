@@ -102,11 +102,17 @@ export default function Contact() {
                 </a>
               </div>
               <div>
-                <h4 className="uppercase tracking-widest text-xs font-bold text-gray-500 mb-2">Studio</h4>
-                <p className="text-xl font-light">
-                  Premium Architecture District,<br />
-                  Design City, DC 10001
-                </p>
+                <h4 className="uppercase tracking-widest text-xs font-bold text-gray-500 mb-2">Address</h4>
+                <a 
+                  href="https://www.google.com/maps/place/Ballem+Vari+St,+Andhra+Pradesh/@16.515107,80.6799996,16.94z/data=!4m15!1m8!3m7!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!2sBallem+Vari+St,+Andhra+Pradesh!3b1!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x!3m5!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYyMi4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xl font-light hover:text-[#d4af37] transition-colors leading-relaxed block"
+                >
+                  BALLAM VARI STREET,<br />
+                  RAMAVARAPADU,<br />
+                  VIJAYAWADA
+                </a>
               </div>
             </div>
           </div>
@@ -196,12 +202,17 @@ export default function Contact() {
             </form>
             
             {/* Map Placeholder */}
-            <div className="w-full h-[300px] bg-[#121212] rounded-2xl overflow-hidden border border-white/5 relative group">
+            <a 
+              href="https://www.google.com/maps/place/Ballem+Vari+St,+Andhra+Pradesh/@16.515107,80.6799996,16.94z/data=!4m15!1m8!3m7!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!2sBallem+Vari+St,+Andhra+Pradesh!3b1!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x!3m5!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYyMi4wIKXMDSoASAFQAw%3D%3D"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full h-[300px] bg-[#121212] rounded-2xl overflow-hidden border border-white/5 relative group block"
+            >
               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1600&auto=format&fit=crop" className="w-full h-full object-cover opacity-40 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-70 transition-all duration-700" alt="Map View" />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                  <div className="px-6 py-3 bg-black/80 backdrop-blur text-white uppercase tracking-widest text-sm rounded border border-white/10">Location Map</div>
               </div>
-            </div>
+            </a>
           </div>
 
         </div>
