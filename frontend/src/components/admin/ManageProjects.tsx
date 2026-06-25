@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import API, { getBackendUrl } from '../../api';
 
-const CATEGORIES = ['Landscape', 'Water Bodies', 'Interior Design', 'Architecture', 'Playstation'];
+const CATEGORIES = ['Landscape', 'Water Bodies', 'Interior Design', 'Constructions', 'Playstation'];
 
 interface Project {
   _id: string;

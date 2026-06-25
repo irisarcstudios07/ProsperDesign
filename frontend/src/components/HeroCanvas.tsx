@@ -120,7 +120,7 @@ export default function HeroCanvas() {
           Prosper Design
         </h1>
         <p className="text-lg md:text-2xl text-gray-200 mb-2 font-light tracking-widest">
-          Architecture &bull; Interiors &bull; Landscape
+          Construction &bull; Interiors &bull; Landscape
         </p>
         <p className="text-md md:text-xl text-gray-300 mb-8 font-light italic">
           Crafting Timeless Spaces.

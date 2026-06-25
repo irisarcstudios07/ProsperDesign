@@ -8,7 +8,7 @@ export default function WhatsAppButton() {
     const handleScroll = () => {
       const aboutEl = document.getElementById('about');
       const contactEl = document.getElementById('contact');
-      
+
       const checkInViewport = (el: HTMLElement | null) => {
         if (!el) return false;
         const rect = el.getBoundingClientRect();
@@ -28,7 +28,7 @@ export default function WhatsAppButton() {
   if (!isVisible) return null;
 
   const phoneNumber = '919700521522';
-  const message = encodeURIComponent('Hi we came here from website i want to connect with you prosper design for a service');
+  const message = encodeURIComponent('Hi we came here from website ProsperDesign i want to connect with you prosper design for a service');
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 
   return (

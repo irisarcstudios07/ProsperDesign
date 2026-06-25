@@ -6,7 +6,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const features = [
   { title: 'Custom Design', desc: 'Every project is uniquely tailored to your vision and lifestyle, ensuring absolute exclusivity.' },
-  { title: 'Professional Team', desc: 'Our experts bring decades of combined experience across architecture and design disciplines.' },
+  { title: 'Professional Team', desc: 'Our experts bring decades of combined experience across construction and design disciplines.' },
   { title: 'Luxury Finishes', desc: 'We source only the finest premium materials globally for an opulent and enduring result.' },
   { title: 'Fast Execution', desc: 'Efficient project management guarantees timely delivery without compromising on quality.' },
   { title: 'Attention To Detail', desc: 'Meticulous planning and execution down to the finest granular detail.' },

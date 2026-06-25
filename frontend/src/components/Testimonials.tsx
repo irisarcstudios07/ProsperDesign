@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 
 const testimonials = [
   { id: 1, text: "Prosper Design transformed our vision into a reality that exceeded all expectations. Their attention to detail and commitment to luxury is unparalleled.", author: "Sarah Jenkins", role: "Homeowner" },
-  { id: 2, text: "The synergy between the landscape and architecture they created for our estate is breathtaking. A truly world-class design firm.", author: "Michael Chen", role: "Property Developer" },
+  { id: 2, text: "The synergy between the landscape and construction they created for our estate is breathtaking. A truly world-class design firm.", author: "Michael Chen", role: "Property Developer" },
   { id: 3, text: "From the initial concept to the final execution, their process was flawless. They didn't just build a house; they crafted a masterpiece.", author: "Elena Rodriguez", role: "Client" }
 ];
 

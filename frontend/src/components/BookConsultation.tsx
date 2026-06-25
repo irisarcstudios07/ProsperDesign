@@ -145,10 +145,11 @@ export default function BookConsultation() {
                   className="w-full bg-black/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors appearance-none"
                 >
                   <option value="" className="text-gray-500">Select Project Type</option>
-                  <option value="Architecture">Architecture</option>
+                  <option value="Constructions">Constructions</option>
                   <option value="Interior Design">Interior Design</option>
                   <option value="Landscape">Landscape</option>
-                  <option value="Water Feature">Water Feature</option>
+                  <option value="Water Bodies">Water Bodies</option>
+                  <option value="Playstation">Playstation</option>
                 </select>
               </div>
             </div>

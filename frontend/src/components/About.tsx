@@ -68,7 +68,7 @@ export default function About() {
             <div className="relative rounded-2xl overflow-hidden shadow-2xl h-[500px] w-full">
               <img 
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=1000&auto=format&fit=crop" 
-                alt="Luxury Architecture" 
+                alt="Luxury Construction" 
                 className="w-full h-full object-cover"
               />
             </div>

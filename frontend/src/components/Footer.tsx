@@ -10,7 +10,7 @@ export default function Footer() {
               Prosper<span className="text-[#d4af37]">.</span>
             </div>
             <p className="text-gray-400 font-light leading-relaxed mb-8">
-              Crafting timeless spaces that elevate the human experience. Premium architecture, interiors, and landscape design.
+              Crafting timeless spaces that elevate the human experience. Premium construction, interiors, and landscape design.
             </p>
             <div className="flex gap-4">
               <a href="https://www.instagram.com/prosper_designs17" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiInstagram /></a>
