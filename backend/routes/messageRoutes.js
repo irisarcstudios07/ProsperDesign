@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
 const { protect } = require('../middleware/authMiddleware');
+const dns = require('dns');
 const nodemailer = require('nodemailer');
 
 // ─── Nodemailer Transporter — Force IPv4 (fixes ENETUNREACH on Render) ──────
@@ -10,6 +11,17 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,       // TLS (STARTTLS) not SSL
   family: 4,           // Force IPv4 — avoids ENETUNREACH IPv6 on Render
+  lookup: (hostname, options, callback) => {
+    // Force resolving using IPv4 DNS queries directly
+    dns.resolve4(hostname, (err, addresses) => {
+      if (err || !addresses.length) {
+        // Fallback to standard lookup forced to IPv4 if resolve4 fails
+        return dns.lookup(hostname, { family: 4 }, callback);
+      }
+      // Return the first resolved IPv4 address
+      callback(null, addresses[0], 4);
+    });
+  },
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
