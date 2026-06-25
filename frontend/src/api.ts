@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+console.log("ENV =", import.meta.env);
+console.log("API URL =", import.meta.env.VITE_API_URL);
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://prosperdesign17.onrender.com/api';
 
 const API = axios.create({ 
