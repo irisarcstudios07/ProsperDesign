@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
 const Setting = require('../models/Setting');
 const { protect } = require('../middleware/authMiddleware');
+const { uploadToCloudinary } = require('../config/cloudinary');
 
-// Multer Disk Storage for Logo
+// Multer Disk Storage for temporary Logo upload staging
 const storage = multer.diskStorage({
   destination(req, file, cb) {
     cb(null, 'uploads/');
@@ -58,7 +58,10 @@ router.put('/', protect, upload.single('logo'), async (req, res) => {
     };
 
     if (req.file) {
-      settings.logo = req.file.path.replace(/\\/g, '/');
+      const uploadRes = await uploadToCloudinary(req.file.path, 'prosper_design/logos');
+      if (uploadRes) {
+        settings.logo = uploadRes.secure_url;
+      }
     }
 
     const updatedSettings = await settings.save();

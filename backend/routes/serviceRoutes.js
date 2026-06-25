@@ -1,8 +1,20 @@
 const express = require('express');
 const router = express.Router();
+const multer = require('multer');
 const Service = require('../models/Service');
 const { protect } = require('../middleware/authMiddleware');
-const { upload } = require('../config/cloudinary');
+const { uploadToCloudinary } = require('../config/cloudinary');
+
+// Multer Local Disk Storage for temporary files
+const storage = multer.diskStorage({
+  destination(req, file, cb) {
+    cb(null, 'uploads/');
+  },
+  filename(req, file, cb) {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+const upload = multer({ storage });
 
 // @route   GET /api/services
 // @desc    Get all services
@@ -23,7 +35,17 @@ router.post('/', protect, upload.array('multipleImages', 10), async (req, res) =
     
     // Combine URL list + uploaded files
     const urlList = urlImages ? JSON.parse(urlImages) : [];
-    const uploadedImages = req.files ? req.files.map(file => file.path) : [];
+    
+    const uploadedImages = [];
+    if (req.files && req.files.length > 0) {
+      for (const file of req.files) {
+        const uploadRes = await uploadToCloudinary(file.path, 'prosper_design/services');
+        if (uploadRes) {
+          uploadedImages.push(uploadRes.secure_url);
+        }
+      }
+    }
+    
     const multipleImages = [...urlList, ...uploadedImages];
 
     const newService = new Service({
@@ -55,12 +77,20 @@ router.put('/:id', protect, upload.array('multipleImages', 10), async (req, res)
     service.category = category || service.category;
 
     if (req.files && req.files.length > 0) {
-      service.multipleImages = [...service.multipleImages, ...req.files.map(file => file.path)];
+      const uploadedImages = [];
+      for (const file of req.files) {
+        const uploadRes = await uploadToCloudinary(file.path, 'prosper_design/services');
+        if (uploadRes) {
+          uploadedImages.push(uploadRes.secure_url);
+        }
+      }
+      service.multipleImages = [...service.multipleImages, ...uploadedImages];
     }
 
     const updatedService = await service.save();
     res.json(updatedService);
   } catch (error) {
+    console.error('Update service error:', error);
     res.status(500).json({ message: 'Server Error' });
   }
 });

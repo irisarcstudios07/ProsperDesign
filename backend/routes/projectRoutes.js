@@ -3,8 +3,9 @@ const router = express.Router();
 const multer = require('multer');
 const Project = require('../models/Project');
 const { protect } = require('../middleware/authMiddleware');
+const { uploadToCloudinary } = require('../config/cloudinary');
 
-// Multer Local Disk Storage configuration
+// Multer Local Disk Storage configuration for temporary file staging
 const storage = multer.diskStorage({
   destination(req, file, cb) {
     if (file.fieldname === 'thumbnail') {
@@ -40,13 +41,21 @@ router.post('/', protect, upload.fields([
   try {
     const { title, description, category, featured, visibility } = req.body;
     
-    const thumbnail = req.files && req.files['thumbnail'] 
-      ? req.files['thumbnail'][0].path.replace(/\\/g, '/') 
-      : '';
+    // Upload thumbnail to Cloudinary
+    let thumbnail = '';
+    if (req.files && req.files['thumbnail']) {
+      const localPath = req.files['thumbnail'][0].path;
+      const uploadRes = await uploadToCloudinary(localPath, 'prosper_design/projects/thumbnails');
+      thumbnail = uploadRes ? uploadRes.secure_url : '';
+    }
       
-    const video = req.files && req.files['video'] 
-      ? req.files['video'][0].path.replace(/\\/g, '/') 
-      : '';
+    // Upload video to Cloudinary
+    let video = '';
+    if (req.files && req.files['video']) {
+      const localPath = req.files['video'][0].path;
+      const uploadRes = await uploadToCloudinary(localPath, 'prosper_design/projects/videos');
+      video = uploadRes ? uploadRes.secure_url : '';
+    }
 
     const newProject = new Project({
       title,
@@ -85,11 +94,19 @@ router.put('/:id', protect, upload.fields([
     project.visibility = visibility !== undefined ? visibility === 'true' : project.visibility;
 
     if (req.files && req.files['thumbnail']) {
-      project.thumbnail = req.files['thumbnail'][0].path.replace(/\\/g, '/');
+      const localPath = req.files['thumbnail'][0].path;
+      const uploadRes = await uploadToCloudinary(localPath, 'prosper_design/projects/thumbnails');
+      if (uploadRes) {
+        project.thumbnail = uploadRes.secure_url;
+      }
     }
     
     if (req.files && req.files['video']) {
-      project.video = req.files['video'][0].path.replace(/\\/g, '/');
+      const localPath = req.files['video'][0].path;
+      const uploadRes = await uploadToCloudinary(localPath, 'prosper_design/projects/videos');
+      if (uploadRes) {
+        project.video = uploadRes.secure_url;
+      }
     }
 
     const updatedProject = await project.save();

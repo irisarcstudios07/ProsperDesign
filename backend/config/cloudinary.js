@@ -1,6 +1,5 @@
 const cloudinary = require('cloudinary').v2;
-const { CloudinaryStorage } = require('multer-storage-cloudinary');
-const multer = require('multer');
+const fs = require('fs');
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -8,15 +7,35 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'prosper_design',
-    allowed_formats: ['jpg', 'jpeg', 'png', 'webp', 'mp4', 'mov'],
-    resource_type: 'auto'
-  },
-});
+const uploadToCloudinary = async (localFilePath, folder = 'prosper_design') => {
+  try {
+    if (!localFilePath) return null;
+    
+    const result = await cloudinary.uploader.upload(localFilePath, {
+      folder: folder,
+      resource_type: 'auto'
+    });
 
-const upload = multer({ storage: storage });
+    // Delete local temporary file
+    if (fs.existsSync(localFilePath)) {
+      fs.unlinkSync(localFilePath);
+    }
 
-module.exports = { cloudinary, upload };
+    return {
+      secure_url: result.secure_url,
+      public_id: result.public_id
+    };
+  } catch (error) {
+    console.error('Cloudinary upload failed:', error);
+    if (fs.existsSync(localFilePath)) {
+      try {
+        fs.unlinkSync(localFilePath);
+      } catch (err) {
+        console.error('Failed to delete local file on error:', err);
+      }
+    }
+    throw error;
+  }
+};
+
+module.exports = { cloudinary, uploadToCloudinary };
