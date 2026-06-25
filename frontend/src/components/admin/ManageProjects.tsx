@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../api';
+import API, { getBackendUrl } from '../../api';
 
 const CATEGORIES = ['Landscape', 'Water Bodies', 'Interior Design', 'Architecture', 'Playstation'];
 
@@ -146,7 +146,7 @@ export default function ManageProjects() {
                   <div className="mb-2">
                     <p className="text-gray-500 text-xs mb-1">Current Thumbnail:</p>
                     <img 
-                      src={editingProject.thumbnail.startsWith('http') ? editingProject.thumbnail : `http://localhost:5000/${editingProject.thumbnail}`} 
+                      src={editingProject.thumbnail.startsWith('http') ? editingProject.thumbnail : `${getBackendUrl()}/${editingProject.thumbnail}`} 
                       alt="Current Thumbnail" 
                       className="h-20 w-auto object-cover rounded-lg border border-white/10" 
                     />
@@ -208,7 +208,7 @@ export default function ManageProjects() {
             <div key={p._id} className="bg-[#1a1a1a] rounded-2xl border border-white/10 overflow-hidden">
               {p.thumbnail && (
                 <img 
-                  src={p.thumbnail.startsWith('http') ? p.thumbnail : `http://localhost:5000/${p.thumbnail}`} 
+                  src={p.thumbnail.startsWith('http') ? p.thumbnail : `${getBackendUrl()}/${p.thumbnail}`} 
                   alt={p.title} 
                   className="w-full h-40 object-cover" 
                 />

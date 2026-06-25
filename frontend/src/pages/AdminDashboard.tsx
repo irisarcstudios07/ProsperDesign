@@ -4,7 +4,7 @@ import ManageProjects from '../components/admin/ManageProjects';
 import ManageServices from '../components/admin/ManageServices';
 import CustomerMessages from '../components/admin/CustomerMessages';
 import AdminSettings from '../components/admin/AdminSettings';
-import API from '../api';
+import API, { getBackendUrl } from '../api';
 
 interface Message {
   _id: string;
@@ -163,7 +163,7 @@ export default function AdminDashboard() {
                       <div key={p._id} className="flex justify-between items-center bg-[#121212] p-3 rounded-lg border border-white/5">
                         <div className="flex items-center gap-3">
                           <img 
-                            src={p.thumbnail.startsWith('http') ? p.thumbnail : `http://localhost:5000/${p.thumbnail}`} 
+                            src={p.thumbnail.startsWith('http') ? p.thumbnail : `${getBackendUrl()}/${p.thumbnail}`} 
                             alt={p.title} 
                             className="w-10 h-10 object-cover rounded-lg" 
                           />

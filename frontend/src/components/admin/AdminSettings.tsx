@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import API from '../../api';
+import API, { getBackendUrl } from '../../api';
 
 export default function AdminSettings() {
   const [form, setForm] = useState({
@@ -107,7 +107,7 @@ export default function AdminSettings() {
             <div className="mb-4">
               <p className="text-gray-500 text-xs mb-1">Current Logo:</p>
               <img 
-                src={currentLogo.startsWith('http') ? currentLogo : `http://localhost:5000/${currentLogo}`} 
+                src={currentLogo.startsWith('http') ? currentLogo : `${getBackendUrl()}/${currentLogo}`} 
                 alt="Current Logo" 
                 className="h-16 w-auto object-contain bg-white/10 p-1 rounded" 
               />

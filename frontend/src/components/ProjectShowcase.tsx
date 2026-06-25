@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FiX, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
-import API from '../api';
+import API, { getBackendUrl } from '../api';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -126,7 +126,7 @@ export default function ProjectShowcase() {
             {projects.map((project, idx) => {
               const thumbUrl = project.thumbnail.startsWith('http') 
                 ? project.thumbnail 
-                : `http://localhost:5000/${project.thumbnail}`;
+                : `${getBackendUrl()}/${project.thumbnail}`;
               const formattedId = String(idx + 1).padStart(2, '0');
 
               return (
@@ -201,7 +201,7 @@ export default function ProjectShowcase() {
                   className="w-full h-full object-contain"
                 >
                   <source 
-                    src={activeProject.video.startsWith('http') ? activeProject.video : `http://localhost:5000/${activeProject.video}`} 
+                    src={activeProject.video.startsWith('http') ? activeProject.video : `${getBackendUrl()}/${activeProject.video}`} 
                     type="video/mp4" 
                   />
                   Your browser does not support the video tag.
