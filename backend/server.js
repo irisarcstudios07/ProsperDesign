@@ -32,8 +32,7 @@ app.use(helmet({
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    /vercel\.app$/, // Allow Vercel deployments and preview URLs
-    /netlify\.app$/ // Allow Netlify deployments and preview URLs
+    "https://prosper-design.vercel.app"
   ],
   credentials: true
 }));
