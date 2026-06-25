@@ -4,12 +4,18 @@ const Message = require('../models/Message');
 const { protect } = require('../middleware/authMiddleware');
 const nodemailer = require('nodemailer');
 
-// ─── Nodemailer Transporter with timeouts ────────────────────────────────────
+// ─── Nodemailer Transporter — Force IPv4 (fixes ENETUNREACH on Render) ──────
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+  host: 'smtp.gmail.com',
+  port: 587,
+  secure: false,       // TLS (STARTTLS) not SSL
+  family: 4,           // Force IPv4 — avoids ENETUNREACH IPv6 on Render
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
   },
   connectionTimeout: 10000,
   greetingTimeout: 10000,
@@ -21,7 +27,7 @@ transporter.verify((error) => {
   if (error) {
     console.error('❌ SMTP Connection Error:', error.message);
   } else {
-    console.log('✅ SMTP Ready - Email notifications enabled');
+    console.log('✅ SMTP Ready - Email notifications enabled (IPv4)');
   }
 });
 
