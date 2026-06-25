@@ -30,10 +30,23 @@ app.use(helmet({
 }));
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://prosper-design.vercel.app"
-  ],
+  origin: function (origin, callback) {
+    const allowed = [
+      "http://localhost:5173",
+      "https://prosper-design.vercel.app"
+    ];
+
+    if (!origin) return callback(null, true);
+
+    if (
+      allowed.includes(origin) ||
+      origin.endsWith(".vercel.app")
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("CORS not allowed"));
+  },
   credentials: true
 }));
 
@@ -54,6 +67,13 @@ app.get('/', (req, res) => {
 
 app.get('/health', (req, res) => {
   res.json({
+    status: "ok"
+  });
+});
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    success: true,
     status: "ok"
   });
 });

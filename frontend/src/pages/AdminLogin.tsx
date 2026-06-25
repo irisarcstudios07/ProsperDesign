@@ -19,7 +19,14 @@ export default function AdminLogin() {
       localStorage.setItem('token', data.token);
       navigate('/admin/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Invalid credentials. Please try again.');
+      console.log(err);
+      console.log(err.response);
+      console.log(err.message);
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        "Unknown Error"
+      );
     } finally {
       setLoading(false);
     }

@@ -62,7 +62,14 @@ export default function BookConsultation() {
       setProjectType('');
       setMessage('');
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Failed to submit request. Please try again.');
+      console.log(err);
+      console.log(err.response);
+      console.log(err.message);
+      setError(
+        err.response?.data?.message ||
+        err.message ||
+        "Unknown Error"
+      );
     } finally {
       setLoading(false);
     }
