@@ -45,7 +45,7 @@ export default function Footer() {
             <h4 className="uppercase tracking-widest font-bold mb-6 text-sm">Contact Info</h4>
             <ul className="space-y-4 font-light text-gray-400">
               <li>97005 21522</li>
-              <li><a href="mailto:rambabumiryala4@gmail.com" className="hover:text-white transition-colors break-all">rambabumiryala4@gmail.com</a></li>
+              <li><a href="mailto:prosperdesigns17@gmail.com" className="hover:text-white transition-colors break-all">prosperdesigns17@gmail.com</a></li>
               <li className="pt-2">
                 BALLAM VARI STREET,<br />
                 RAMAVARAPADU,<br />
