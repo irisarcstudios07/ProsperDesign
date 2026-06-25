@@ -13,7 +13,7 @@ export default function Footer() {
               Crafting timeless spaces that elevate the human experience. Premium architecture, interiors, and landscape design.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiInstagram /></a>
+              <a href="https://www.instagram.com/prosper_designs17" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiInstagram /></a>
               <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiFacebook /></a>
               <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiTwitter /></a>
               <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiLinkedin /></a>
@@ -33,10 +33,11 @@ export default function Footer() {
           <div>
             <h4 className="uppercase tracking-widest font-bold mb-6 text-sm">Services</h4>
             <ul className="space-y-4 font-light text-gray-400">
-              <li><a href="#" className="hover:text-white transition-colors">Architecture</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Constructions</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Interior Design</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Landscape</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Water Bodies</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Playstation</a></li>
             </ul>
           </div>
           
@@ -46,8 +47,9 @@ export default function Footer() {
               <li>97005 21522</li>
               <li><a href="mailto:rambabumiryala4@gmail.com" className="hover:text-white transition-colors break-all">rambabumiryala4@gmail.com</a></li>
               <li className="pt-2">
-                Premium Architecture District,<br />
-                Design City, DC 10001
+                BALLAM VARI STREET,<br />
+                RAMAVARAPADU,<br />
+                VIJAYAWADA
               </li>
             </ul>
           </div>

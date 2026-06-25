@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const categories = ['All', 'Landscape', 'Water Bodies', 'Interior Design', 'Architecture', 'Playstation'];
+const categories = ['All', 'Landscape', 'Water Bodies', 'Interior Design', 'Constructions', 'Playstation'];
 
 const portfolioItems = [
   { id: 1, title: 'Serene Garden', category: 'Landscape', img: '/land1.jpg' },
@@ -12,7 +12,7 @@ const portfolioItems = [
   { id: 7, title: 'Zen Pathway', category: 'Landscape', img: '/land3.jpg' },
   { id: 8, title: 'Cascading Fall', category: 'Water Bodies', img: '/water3.jpeg' },
   { id: 9, title: 'Elegant Kitchen', category: 'Interior Design', img: '/interior4.jpg' },
-  { id: 10, title: 'Contemporary Villa', category: 'Architecture', img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop' },
+  { id: 10, title: 'Contemporary Villa', category: 'Constructions', img: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=1000&auto=format&fit=crop' },
   { id: 'play1', title: 'Playstation Project 1', category: 'Playstation', img: '/Play1.jpg' },
   { id: 'play2', title: 'Playstation Project 2', category: 'Playstation', img: '/play2.jpg' },
   { id: 'play3', title: 'Playstation Project 3', category: 'Playstation', img: '/play3.jpg' },
