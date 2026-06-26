@@ -42,7 +42,7 @@ export default function WhyChooseUs() {
   }, []);
 
   return (
-    <section className="py-24 md:py-32 bg-[#1a1a1a] text-white">
+    <section className="py-24 md:py-32 bg-[#1A2A40] text-white">
       <div className="container mx-auto px-6 md:px-12">
         <div className="text-center mb-20 max-w-3xl mx-auto">
           <h3 className="text-[#d4af37] text-sm font-bold uppercase tracking-widest mb-4">Why Choose Us</h3>
@@ -55,7 +55,7 @@ export default function WhyChooseUs() {
           {features.map((feature, i) => (
             <div 
               key={i} 
-              className="feature-card p-8 md:p-10 border border-white/5 hover:border-[#d4af37]/50 bg-[#121212] transition-colors duration-500 rounded-xl group"
+              className="feature-card p-8 md:p-10 border border-white/5 hover:border-[#d4af37]/50 bg-[#2A4365] transition-colors duration-500 rounded-xl group"
             >
               <div className="text-[#d4af37] text-xl font-bold mb-6 font-serif italic opacity-50 group-hover:opacity-100 transition-opacity">
                 0{i + 1}

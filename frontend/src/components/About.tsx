@@ -40,7 +40,7 @@ export default function About() {
   }, []);
 
   return (
-    <section id="about" ref={sectionRef} className="py-24 md:py-32 bg-[#121212] text-white overflow-hidden">
+    <section id="about" ref={sectionRef} className="py-24 md:py-32 bg-[#2A4365] text-white overflow-hidden">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24">
           

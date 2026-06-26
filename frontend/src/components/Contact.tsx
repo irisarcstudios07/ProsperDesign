@@ -74,7 +74,7 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 md:py-32 bg-[#1a1a1a] text-white">
+    <section id="contact" className="py-24 md:py-32 bg-[#1A2A40] text-white">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col lg:flex-row gap-16">
           
@@ -139,7 +139,7 @@ export default function Contact() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="bg-[#121212] p-8 md:p-12 rounded-2xl border border-white/5">
+            <form onSubmit={handleSubmit} className="bg-[#2A4365] p-8 md:p-12 rounded-2xl border border-white/5">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
                 <input 
                   type="text" 
@@ -213,7 +213,7 @@ export default function Contact() {
               href="https://www.google.com/maps/place/Ballem+Vari+St,+Andhra+Pradesh/@16.515107,80.6799996,16.94z/data=!4m15!1m8!3m7!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!2sBallem+Vari+St,+Andhra+Pradesh!3b1!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x!3m5!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYyMi4wIKXMDSoASAFQAw%3D%3D"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full h-[300px] bg-[#121212] rounded-2xl overflow-hidden border border-white/5 relative group block"
+              className="w-full h-[300px] bg-[#2A4365] rounded-2xl overflow-hidden border border-white/5 relative group block"
             >
               <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=1600&auto=format&fit=crop" className="w-full h-full object-cover opacity-40 mix-blend-luminosity group-hover:mix-blend-normal group-hover:opacity-70 transition-all duration-700" alt="Map View" />
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">

@@ -59,7 +59,7 @@ export default function AdminSettings() {
     <div>
       <label className="text-gray-400 text-sm block mb-1">{label}</label>
       <input type={type} value={form[key]} onChange={e => setForm(p => ({ ...p, [key]: e.target.value }))}
-        className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none" />
+        className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none" />
     </div>
   );
 
@@ -70,7 +70,7 @@ export default function AdminSettings() {
       {success && <div className="bg-green-900/30 border border-green-500 text-green-400 px-4 py-3 rounded-lg mb-4">{success}</div>}
 
       <form onSubmit={handleSave} className="space-y-6">
-        <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-6">
           <h4 className="text-white font-bold mb-4">Business Info</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {field('Business Name', 'businessName')}
@@ -83,7 +83,7 @@ export default function AdminSettings() {
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-6">
           <h4 className="text-white font-bold mb-4">Hero Section</h4>
           <div className="space-y-4">
             {field('Hero Title', 'heroTitle')}
@@ -91,7 +91,7 @@ export default function AdminSettings() {
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-6">
           <h4 className="text-white font-bold mb-4">Social Links</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {field('Facebook URL', 'facebook')}
@@ -101,7 +101,7 @@ export default function AdminSettings() {
           </div>
         </div>
 
-        <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-6">
+        <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-6">
           <h4 className="text-white font-bold mb-4">Logo</h4>
           {currentLogo && (
             <div className="mb-4">
@@ -114,7 +114,7 @@ export default function AdminSettings() {
             </div>
           )}
           <input type="file" accept="image/*" onChange={e => setLogoFile(e.target.files?.[0] || null)}
-            className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-gray-400 text-sm" />
+            className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-gray-400 text-sm" />
           {logoFile && <p className="text-green-400 text-xs mt-2">✓ {logoFile.name}</p>}
         </div>
 

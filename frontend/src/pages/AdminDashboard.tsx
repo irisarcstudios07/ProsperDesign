@@ -102,7 +102,7 @@ export default function AdminDashboard() {
           <div className="space-y-6">
             {/* Welcome Card & Date/Time */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              <div className="lg:col-span-2 bg-gradient-to-r from-[#d4af37]/20 to-[#1a1a1a] p-8 rounded-2xl border border-[#d4af37]/30 flex flex-col justify-between">
+              <div className="lg:col-span-2 bg-gradient-to-r from-[#d4af37]/20 to-[#1A2A40] p-8 rounded-2xl border border-[#d4af37]/30 flex flex-col justify-between">
                 <div>
                   <h3 className="text-[#d4af37] text-2xl font-bold mb-2">{getGreeting()}</h3>
                   <p className="text-gray-300 text-base leading-relaxed">
@@ -120,7 +120,7 @@ export default function AdminDashboard() {
                 </div>
               </div>
 
-              <div className="bg-[#1a1a1a] p-8 rounded-2xl border border-white/10 flex flex-col justify-center items-center text-center">
+              <div className="bg-[#1A2A40] p-8 rounded-2xl border border-white/10 flex flex-col justify-center items-center text-center">
                 <span className="text-[#d4af37] uppercase text-xs tracking-widest mb-2 font-bold">System Time</span>
                 <p className="text-4xl font-bold tracking-wider text-white mb-2">
                   {time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}
@@ -133,15 +133,15 @@ export default function AdminDashboard() {
 
             {/* Metrics cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('projects')}>
+              <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('projects')}>
                 <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider font-semibold">Total Projects</h3>
                 <p className="text-5xl font-bold text-white">{stats.projectsCount}</p>
               </div>
-              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('services')}>
+              <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('services')}>
                 <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider font-semibold">Total Services</h3>
                 <p className="text-5xl font-bold text-white">{stats.servicesCount}</p>
               </div>
-              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('messages')}>
+              <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('messages')}>
                 <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider font-semibold">Unread Messages</h3>
                 <p className="text-5xl font-bold text-white">{stats.unreadMessages}</p>
               </div>
@@ -150,7 +150,7 @@ export default function AdminDashboard() {
             {/* Recent items grid */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               {/* Recent Projects */}
-              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/10">
+              <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10">
                 <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
                   <h4 className="text-lg font-bold text-[#d4af37]">Recent Projects</h4>
                   <button onClick={() => setActiveTab('projects')} className="text-xs text-gray-400 hover:text-white underline">Manage</button>
@@ -160,7 +160,7 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="space-y-3">
                     {recentProjects.map((p) => (
-                      <div key={p._id} className="flex justify-between items-center bg-[#121212] p-3 rounded-lg border border-white/5">
+                      <div key={p._id} className="flex justify-between items-center bg-[#2A4365] p-3 rounded-lg border border-white/5">
                         <div className="flex items-center gap-3">
                           <img 
                             src={p.thumbnail.startsWith('http') ? p.thumbnail : `${getBackendUrl()}/${p.thumbnail}`} 
@@ -180,7 +180,7 @@ export default function AdminDashboard() {
               </div>
 
               {/* Recent Messages */}
-              <div className="bg-[#1a1a1a] p-6 rounded-2xl border border-white/10">
+              <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10">
                 <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-3">
                   <h4 className="text-lg font-bold text-[#d4af37]">Recent Messages</h4>
                   <button onClick={() => setActiveTab('messages')} className="text-xs text-gray-400 hover:text-white underline">View Inbox</button>
@@ -190,7 +190,7 @@ export default function AdminDashboard() {
                 ) : (
                   <div className="space-y-3">
                     {recentMessages.map((m) => (
-                      <div key={m._id} className={`p-3 rounded-lg border flex flex-col justify-between ${m.readStatus ? 'bg-[#121212] border-white/5' : 'bg-[#d4af37]/5 border-[#d4af37]/20'}`}>
+                      <div key={m._id} className={`p-3 rounded-lg border flex flex-col justify-between ${m.readStatus ? 'bg-[#2A4365] border-white/5' : 'bg-[#d4af37]/5 border-[#d4af37]/20'}`}>
                         <div className="flex justify-between items-start mb-1">
                           <span className="text-sm font-semibold text-white">{m.name}</span>
                           <span className="text-xs text-gray-500">{new Date(m.createdAt).toLocaleDateString()}</span>
@@ -218,9 +218,9 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] text-white flex">
+    <div className="min-h-screen bg-[#2A4365] text-white flex">
       {/* Sidebar */}
-      <div className="w-64 bg-[#1a1a1a] border-r border-white/10 p-6 flex flex-col">
+      <div className="w-64 bg-[#1A2A40] border-r border-white/10 p-6 flex flex-col">
         <h1 className="text-[#d4af37] text-2xl font-bold uppercase tracking-widest mb-10">Admin Panel</h1>
         <nav className="flex-1 space-y-2">
           {[

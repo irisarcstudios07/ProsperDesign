@@ -121,19 +121,19 @@ export default function ManageProjects() {
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <h4 className="text-xl font-bold text-[#d4af37] mb-6">{editingProject ? 'Edit Project' : 'Add New Project'}</h4>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="text-gray-400 text-sm block mb-1">Title *</label>
                   <input type="text" required value={formData.title} onChange={e => setFormData(p => ({...p, title: e.target.value}))}
-                    className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none" />
+                    className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none" />
                 </div>
                 <div>
                   <label className="text-gray-400 text-sm block mb-1">Category *</label>
                   <select value={formData.category} onChange={e => setFormData(p => ({...p, category: e.target.value}))}
-                    className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none">
+                    className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none">
                     {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                   </select>
                 </div>
@@ -142,14 +142,14 @@ export default function ManageProjects() {
               <div>
                 <label className="text-gray-400 text-sm block mb-1">Description</label>
                 <textarea rows={3} value={formData.description} onChange={e => setFormData(p => ({...p, description: e.target.value}))}
-                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none" />
+                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none" />
               </div>
 
               <div>
                 <label className="text-gray-400 text-sm block mb-1">Additional Image URLs (One per line)</label>
                 <textarea rows={3} value={formData.urlImages} onChange={e => setFormData(p => ({...p, urlImages: e.target.value}))}
                   placeholder="https://cloudinary.com/image1.jpg&#10;https://cloudinary.com/image2.jpg"
-                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none placeholder-gray-600" />
+                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none placeholder-gray-600" />
               </div>
 
               {/* Thumbnail */}
@@ -168,7 +168,7 @@ export default function ManageProjects() {
                 <div>
                   <label className="text-gray-400 text-xs block mb-1">Upload from Local Storage</label>
                   <input type="file" accept="image/*" required={!editingProject} onChange={e => setThumbnailFile(e.target.files?.[0] || null)}
-                    className="w-full bg-[#121212] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-sm" />
+                    className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-sm" />
                   {thumbnailFile && <p className="text-green-400 text-xs mt-1">✓ {thumbnailFile.name}</p>}
                 </div>
               </div>
@@ -185,7 +185,7 @@ export default function ManageProjects() {
                 <div>
                   <label className="text-gray-400 text-xs block mb-1">Upload from Local Storage</label>
                   <input type="file" accept="video/*" onChange={e => setVideoFile(e.target.files?.[0] || null)}
-                    className="w-full bg-[#121212] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-sm" />
+                    className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-sm" />
                   {videoFile && <p className="text-green-400 text-xs mt-1">✓ {videoFile.name}</p>}
                 </div>
               </div>
@@ -214,11 +214,11 @@ export default function ManageProjects() {
 
       {/* Projects List */}
       {projects.length === 0 ? (
-        <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-10 text-center text-gray-500">No projects yet. Click "+ Add Project" to create your first one.</div>
+        <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-10 text-center text-gray-500">No projects yet. Click "+ Add Project" to create your first one.</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {projects.map(p => (
-            <div key={p._id} className="bg-[#1a1a1a] rounded-2xl border border-white/10 overflow-hidden">
+            <div key={p._id} className="bg-[#1A2A40] rounded-2xl border border-white/10 overflow-hidden">
               {p.thumbnail && (
                 <img 
                   src={p.thumbnail.startsWith('http') ? p.thumbnail : `${getBackendUrl()}/${p.thumbnail}`} 

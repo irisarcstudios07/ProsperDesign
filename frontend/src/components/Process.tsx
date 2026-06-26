@@ -8,7 +8,7 @@ const steps = [
 
 export default function Process() {
   return (
-    <section className="py-32 px-6 md:px-12 bg-[#1a1a1a]">
+    <section className="py-32 px-6 md:px-12 bg-[#1A2A40]">
       <div className="container mx-auto">
         <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-widest mb-20 text-center">
           Our Process
@@ -26,7 +26,7 @@ export default function Process() {
                   <p className="text-gray-400 font-light">{step.desc}</p>
                 </div>
                 
-                <div className="relative z-10 flex items-center justify-center w-16 h-16 rounded-full bg-[#121212] border border-[#d4af37] text-[#d4af37] text-xl font-bold shrink-0 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                <div className="relative z-10 flex items-center justify-center w-16 h-16 rounded-full bg-[#2A4365] border border-[#d4af37] text-[#d4af37] text-xl font-bold shrink-0 shadow-[0_0_15px_rgba(212,175,55,0.3)]">
                   {step.num}
                 </div>
                 

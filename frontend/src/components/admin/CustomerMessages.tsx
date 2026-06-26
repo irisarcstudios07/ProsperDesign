@@ -71,13 +71,13 @@ export default function CustomerMessages() {
       {error && <div className="bg-red-900/30 border border-red-500 text-red-400 px-4 py-3 rounded-lg mb-4">{error}</div>}
 
       {messages.length === 0 ? (
-        <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-10 text-center text-gray-500">
+        <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-10 text-center text-gray-500">
           No messages yet. They will appear here when customers submit the contact or consultation forms.
         </div>
       ) : (
         <div className="space-y-4">
           {messages.map(msg => (
-            <div key={msg._id} className={`bg-[#1a1a1a] rounded-2xl border p-5 transition-colors ${msg.readStatus ? 'border-white/10' : 'border-[#d4af37]/40 bg-[#d4af37]/5'}`}>
+            <div key={msg._id} className={`bg-[#1A2A40] rounded-2xl border p-5 transition-colors ${msg.readStatus ? 'border-white/10' : 'border-[#d4af37]/40 bg-[#d4af37]/5'}`}>
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <div className="flex items-center gap-2">
@@ -100,7 +100,7 @@ export default function CustomerMessages() {
                   <p className="text-gray-500 text-xs">{new Date(msg.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                 </div>
               </div>
-              <p className="text-gray-300 text-sm mb-4 bg-[#121212] rounded-lg p-3 whitespace-pre-wrap leading-relaxed">{msg.message}</p>
+              <p className="text-gray-300 text-sm mb-4 bg-[#2A4365] rounded-lg p-3 whitespace-pre-wrap leading-relaxed">{msg.message}</p>
               <div className="flex gap-2">
                 {!msg.readStatus && (
                   <button onClick={() => markRead(msg._id)} className="text-xs text-green-400 border border-green-400/30 px-3 py-1.5 rounded-lg hover:bg-green-400/10 transition-colors">✓ Mark as Read</button>

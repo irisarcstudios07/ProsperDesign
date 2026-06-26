@@ -2,7 +2,7 @@ import { FiInstagram, FiFacebook, FiTwitter, FiLinkedin } from 'react-icons/fi';
 
 export default function Footer() {
   return (
-    <footer className="bg-[#121212] pt-24 pb-12 px-6 md:px-12 border-t border-white/5 text-white">
+    <footer className="bg-[#2A4365] pt-24 pb-12 px-6 md:px-12 border-t border-white/5 text-white">
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           <div>

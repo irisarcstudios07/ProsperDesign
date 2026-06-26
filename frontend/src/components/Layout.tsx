@@ -31,5 +31,5 @@ export default function Layout({ children }: LayoutProps) {
     };
   }, []);
 
-  return <main className="bg-[#121212] text-white min-h-screen">{children}</main>;
+  return <main className="bg-[#2A4365] text-white min-h-screen">{children}</main>;
 }

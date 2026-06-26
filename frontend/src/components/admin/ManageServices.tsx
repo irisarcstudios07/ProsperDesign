@@ -110,35 +110,35 @@ export default function ManageServices() {
       {/* Form Modal */}
       {showForm && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-8 w-full max-w-xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-8 w-full max-w-xl max-h-[90vh] overflow-y-auto">
             <h4 className="text-xl font-bold text-[#d4af37] mb-6">{editingService ? 'Edit Service' : 'Add New Service'}</h4>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="text-gray-400 text-sm block mb-1">Title *</label>
                 <input type="text" required value={formData.title} onChange={e => setFormData(p => ({ ...p, title: e.target.value }))}
-                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none" />
+                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none" />
               </div>
               <div>
                 <label className="text-gray-400 text-sm block mb-1">Category *</label>
                 <select value={formData.category} onChange={e => setFormData(p => ({ ...p, category: e.target.value }))}
-                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none">
+                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none">
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
               <div>
                 <label className="text-gray-400 text-sm block mb-1">Description</label>
                 <textarea rows={3} value={formData.description} onChange={e => setFormData(p => ({ ...p, description: e.target.value }))}
-                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none" />
+                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none" />
               </div>
               <div>
                 <label className="text-gray-400 text-sm block mb-1">Image URLs (comma-separated Cloudinary or other URLs)</label>
                 <textarea rows={2} value={formData.imageUrls} placeholder="https://res.cloudinary.com/..., https://..." onChange={e => setFormData(p => ({ ...p, imageUrls: e.target.value }))}
-                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none placeholder-gray-600 text-sm" />
+                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none placeholder-gray-600 text-sm" />
               </div>
               <div>
                 <label className="text-gray-400 text-sm block mb-1">Upload Local Images (optional)</label>
                 <input type="file" multiple accept="image/*" onChange={e => setLocalFiles(Array.from(e.target.files || []))}
-                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-gray-400 text-sm" />
+                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2 text-gray-400 text-sm" />
                 {localFiles.length > 0 && <p className="text-xs text-green-400 mt-1">{localFiles.length} file(s) selected</p>}
               </div>
               <div className="flex gap-3 pt-2">
@@ -156,13 +156,13 @@ export default function ManageServices() {
 
       {/* Services List */}
       {services.length === 0 ? (
-        <div className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-10 text-center text-gray-500">
+        <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-10 text-center text-gray-500">
           No services yet. Click "+ Add Service" to create your first one.
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {services.map(svc => (
-            <div key={svc._id} className="bg-[#1a1a1a] rounded-2xl border border-white/10 p-5">
+            <div key={svc._id} className="bg-[#1A2A40] rounded-2xl border border-white/10 p-5">
               <div className="flex justify-between items-start mb-3">
                 <div>
                   <h5 className="text-white font-bold">{svc.title}</h5>

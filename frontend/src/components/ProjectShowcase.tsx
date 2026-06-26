@@ -98,7 +98,7 @@ export default function ProjectShowcase() {
   const activeProject = selectedIdx !== null ? projects[selectedIdx] : null;
 
   return (
-    <section id="projects" ref={sectionRef} className="py-24 md:py-32 bg-[#121212] text-white">
+    <section id="projects" ref={sectionRef} className="py-24 md:py-32 bg-[#2A4365] text-white">
       <div className="container mx-auto px-6 md:px-12">
         <h3 className="text-[#d4af37] text-sm font-bold uppercase tracking-widest mb-4 text-center">Featured Works</h3>
         <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-widest mb-20 text-center">
@@ -118,7 +118,7 @@ export default function ProjectShowcase() {
             <button onClick={fetchProjects} className="bg-[#d4af37] text-black px-6 py-2 rounded font-bold hover:bg-white transition-colors">Retry</button>
           </div>
         ) : projects.length === 0 ? (
-          <div className="bg-[#1a1a1a] rounded-2xl border border-white/5 p-16 text-center text-gray-500 max-w-xl mx-auto">
+          <div className="bg-[#1A2A40] rounded-2xl border border-white/5 p-16 text-center text-gray-500 max-w-xl mx-auto">
             No Projects Available
           </div>
         ) : (
@@ -191,7 +191,7 @@ export default function ProjectShowcase() {
             <FiChevronRight size={30} />
           </button>
 
-          <div className="w-full max-w-4xl bg-[#121212] border border-white/10 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-2xl relative">
+          <div className="w-full max-w-4xl bg-[#2A4365] border border-white/10 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-2xl relative">
             <div className="w-full md:w-2/3 bg-black flex items-center justify-center min-h-[300px] md:min-h-[450px]">
               {activeProject.video ? (
                 <video

@@ -33,8 +33,8 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] flex items-center justify-center">
-      <div className="bg-[#1a1a1a] p-10 rounded-2xl border border-white/10 shadow-2xl w-full max-w-md">
+    <div className="min-h-screen bg-[#2A4365] flex items-center justify-center">
+      <div className="bg-[#1A2A40] p-10 rounded-2xl border border-white/10 shadow-2xl w-full max-w-md">
         <h2 className="text-[#d4af37] text-3xl font-bold uppercase tracking-widest text-center mb-2">Admin Login</h2>
         <p className="text-gray-500 text-center text-sm mb-8">Prosper Design CMS</p>
         {error && <div className="bg-red-900/30 border border-red-500/50 text-red-400 text-sm px-4 py-3 rounded-lg mb-6">{error}</div>}
@@ -45,7 +45,7 @@ export default function AdminLogin() {
               type="text" 
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#d4af37] transition-colors"
               required 
             />
           </div>
@@ -55,7 +55,7 @@ export default function AdminLogin() {
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#d4af37] transition-colors"
+              className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-[#d4af37] transition-colors"
               required 
             />
           </div>

@@ -27,7 +27,7 @@ export default function Services() {
     : portfolioItems.filter(item => item.category === activeTab);
 
   return (
-    <section id="services" className="py-24 md:py-32 bg-[#1a1a1a] text-white">
+    <section id="services" className="py-24 md:py-32 bg-[#1A2A40] text-white">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div className="max-w-2xl">
@@ -60,7 +60,7 @@ export default function Services() {
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className="group relative overflow-hidden rounded-xl cursor-pointer break-inside-avoid bg-[#121212]"
+              className="group relative overflow-hidden rounded-xl cursor-pointer break-inside-avoid bg-[#2A4365]"
               onClick={() => setLightboxImg(item.img)}
             >
               <img 
