@@ -1,7 +1,16 @@
+// ── DB-backed types (MongoDB / Admin panel) ──────────────────────────────
+
+export interface GalleryImage {
+  url: string;
+  caption?: string;
+}
+
 export interface ChildService {
   title: string;
-  image?: string;
+  coverImage?: string;
   description?: string;
+  features?: string[];
+  gallery?: GalleryImage[];
 }
 
 export interface Service {
