@@ -19,7 +19,7 @@ export interface ParentService {
 export const servicesConfig: ParentService[] = [
   {
     title: 'Interior Designing',
-    coverImage: '/InteriorDesigning/Bedrooms/cover.jpeg',
+    coverImage: '/InteriorDesigning/cover.jpg',
     subServices: [
       {
         title: 'Bedrooms',
@@ -83,7 +83,7 @@ export const servicesConfig: ParentService[] = [
   },
   {
     title: 'Exterior & Landscaping',
-    coverImage: '/Exterrior & Landscaping/Garden&Landscaping/Cover.jpeg',
+    coverImage: '/Exterrior & Landscaping/cover.jpg',
     subServices: [
       {
         title: '3D Wall Painting',
