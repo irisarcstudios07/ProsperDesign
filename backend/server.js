@@ -21,7 +21,40 @@ if (fs.existsSync(localEnvPath)) {
 }
 
 // Connect to Database
-connectDB();
+const Client = require('./models/Client');
+const seedClients = async () => {
+  try {
+    const count = await Client.countDocuments();
+    if (count === 0) {
+      console.log('Seeding initial clients...');
+      const initialClients = [
+        "PVR GROUP",
+        "HOTEL - CRAB",
+        "ROYAL ICON",
+        "PVR CLASSIC",
+        "CORNER STONE",
+        "ROYAL RIGHTWAY",
+        "CITY ELITE",
+        "BHAVISHYA HILLS",
+        "SLV",
+        "URBAN MEADOWS",
+        "SKY TOWERS",
+        "ANANDALAHARI",
+        "PRIDE"
+      ];
+      const docs = initialClients.map((name, index) => ({
+        name,
+        order: index,
+        active: true
+      }));
+      await Client.insertMany(docs);
+      console.log('Initial clients seeded successfully!');
+    }
+  } catch (err) {
+    console.error('Error seeding clients:', err.message);
+  }
+};
+connectDB().then(seedClients);
 
 // Ensure upload directories exist
 fs.mkdirSync(path.join(__dirname, 'uploads', 'thumbnails'), { recursive: true });

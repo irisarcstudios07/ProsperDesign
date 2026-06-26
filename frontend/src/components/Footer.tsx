@@ -1,4 +1,5 @@
-import { FiInstagram, FiFacebook, FiTwitter, FiLinkedin } from 'react-icons/fi';
+import { FiInstagram } from 'react-icons/fi';
+import { FaWhatsapp } from 'react-icons/fa';
 
 export default function Footer() {
   return (
@@ -13,10 +14,8 @@ export default function Footer() {
               Crafting timeless spaces that elevate the human experience. Premium construction, interiors, and landscape design.
             </p>
             <div className="flex gap-4">
-              <a href="https://www.instagram.com/prosper_designs17" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiInstagram /></a>
-              <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiFacebook /></a>
-              <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiTwitter /></a>
-              <a href="#" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors"><FiLinkedin /></a>
+              <a href="https://www.instagram.com/prosper_designs17" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors" title="Instagram"><FiInstagram /></a>
+              <a href="https://wa.me/919700521522" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors" title="WhatsApp"><FaWhatsapp /></a>
             </div>
           </div>
           
