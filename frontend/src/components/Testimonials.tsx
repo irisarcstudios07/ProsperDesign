@@ -17,7 +17,7 @@ export default function Testimonials() {
   }, []);
 
   return (
-    <section className="py-24 md:py-32 bg-[#2A4365] text-white">
+    <section className="py-24 md:py-32 bg-[#415C84] text-white">
       <div className="container mx-auto px-6 md:px-12">
         <div className="max-w-4xl mx-auto text-center">
           <h3 className="text-[#d4af37] text-sm font-bold uppercase tracking-widest mb-12">Client Voices</h3>
@@ -30,7 +30,7 @@ export default function Testimonials() {
                   index === current ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
                 }`}
               >
-                <div className="bg-[#1A2A40] p-8 md:p-12 rounded-2xl border border-white/5">
+                <div className="bg-[#2A3F5C] p-8 md:p-12 rounded-2xl border border-white/5">
                   <p className="text-xl md:text-2xl font-light italic mb-8 text-gray-300 leading-relaxed">
                     "{test.text}"
                   </p>

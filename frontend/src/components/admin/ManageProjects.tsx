@@ -36,7 +36,8 @@ export default function ManageProjects() {
   const fetchProjects = async () => {
     try {
       const { data } = await API.get('/projects');
-      setProjects(data);
+      const extractedData = data?.data || data;
+      setProjects(Array.isArray(extractedData) ? extractedData : []);
     } catch (err) {
       setError('Failed to load projects');
     } finally {
@@ -108,6 +109,8 @@ export default function ManageProjects() {
   };
 
   if (loading) return <div className="text-gray-400">Loading projects...</div>;
+
+  const safeProjects = Array.isArray(projects) ? projects : [];
 
   return (
     <div>
@@ -213,11 +216,11 @@ export default function ManageProjects() {
       )}
 
       {/* Projects List */}
-      {projects.length === 0 ? (
+      {safeProjects.length === 0 ? (
         <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-10 text-center text-gray-500">No projects yet. Click "+ Add Project" to create your first one.</div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {projects.map(p => (
+          {safeProjects.map(p => (
             <div key={p._id} className="bg-[#1A2A40] rounded-2xl border border-white/10 overflow-hidden">
               {p.thumbnail && (
                 <img 

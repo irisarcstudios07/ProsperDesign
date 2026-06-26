@@ -20,7 +20,7 @@ import AdminDashboard from './pages/AdminDashboard';
 // Public Layout
 function PublicSite() {
   return (
-    <div id="home" className="bg-[#2A4365] min-h-screen text-white font-sans antialiased overflow-x-hidden">
+    <div id="home" className="bg-[#415C84] min-h-screen text-white font-sans antialiased overflow-x-hidden">
       <Navbar />
       <HeroSequence />
       <About />

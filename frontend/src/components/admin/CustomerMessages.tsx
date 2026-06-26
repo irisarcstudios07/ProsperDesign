@@ -26,7 +26,8 @@ export default function CustomerMessages() {
     setError('');
     try {
       const { data } = await API.get('/messages');
-      setMessages(data);
+      const extractedData = data?.data || data;
+      setMessages(Array.isArray(extractedData) ? extractedData : []);
     } catch (err) {
       setError('Failed to load messages. Make sure the backend is running.');
     } finally {
@@ -54,6 +55,8 @@ export default function CustomerMessages() {
 
   if (loading) return <div className="text-gray-400">Loading messages...</div>;
 
+  const safeMessages = Array.isArray(messages) ? messages : [];
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -70,13 +73,13 @@ export default function CustomerMessages() {
       
       {error && <div className="bg-red-900/30 border border-red-500 text-red-400 px-4 py-3 rounded-lg mb-4">{error}</div>}
 
-      {messages.length === 0 ? (
+      {safeMessages.length === 0 ? (
         <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-10 text-center text-gray-500">
           No messages yet. They will appear here when customers submit the contact or consultation forms.
         </div>
       ) : (
         <div className="space-y-4">
-          {messages.map(msg => (
+          {safeMessages.map(msg => (
             <div key={msg._id} className={`bg-[#1A2A40] rounded-2xl border p-5 transition-colors ${msg.readStatus ? 'border-white/10' : 'border-[#d4af37]/40 bg-[#d4af37]/5'}`}>
               <div className="flex justify-between items-start mb-3">
                 <div>

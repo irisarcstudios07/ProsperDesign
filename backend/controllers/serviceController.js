@@ -12,28 +12,26 @@ const getServices = asyncHandler(async (req, res) => {
 // @desc    Create a service
 // @route   POST /api/services
 const createService = asyncHandler(async (req, res) => {
-  const { title, description, category, urlImages } = req.body;
+  const { title, coverImageUrl, children } = req.body;
   
-  // Combine URL list + uploaded files
-  const urlList = urlImages ? JSON.parse(urlImages) : [];
-  
-  const uploadedImages = [];
-  if (req.files && req.files.length > 0) {
-    for (const file of req.files) {
-      const secureUrl = await uploadImage(file.path, 'prosper_design/services');
-      if (secureUrl) {
-        uploadedImages.push(secureUrl);
-      }
+  let coverImage = coverImageUrl || '';
+  if (req.file) {
+    const secureUrl = await uploadImage(req.file.path, 'prosper_design/services');
+    if (secureUrl) {
+      coverImage = secureUrl;
     }
   }
-  
-  const multipleImages = [...urlList, ...uploadedImages];
+
+  // children is passed as JSON stringified array or as array directly
+  let parsedChildren = [];
+  if (children) {
+    parsedChildren = typeof children === 'string' ? JSON.parse(children) : children;
+  }
 
   const newService = new Service({
     title,
-    description,
-    category,
-    multipleImages
+    coverImage,
+    children: parsedChildren
   });
 
   const savedService = await newService.save();
@@ -48,21 +46,23 @@ const updateService = asyncHandler(async (req, res) => {
     return res.status(404).json({ success: false, message: 'Service not found' });
   }
 
-  const { title, description, category } = req.body;
+  const { title, coverImageUrl, children } = req.body;
   
-  service.title = title || service.title;
-  service.description = description || service.description;
-  service.category = category || service.category;
-
-  if (req.files && req.files.length > 0) {
-    const uploadedImages = [];
-    for (const file of req.files) {
-      const secureUrl = await uploadImage(file.path, 'prosper_design/services');
-      if (secureUrl) {
-        uploadedImages.push(secureUrl);
-      }
+  service.title = title !== undefined ? title : service.title;
+  
+  if (coverImageUrl !== undefined) {
+    service.coverImage = coverImageUrl;
+  }
+  
+  if (req.file) {
+    const secureUrl = await uploadImage(req.file.path, 'prosper_design/services');
+    if (secureUrl) {
+      service.coverImage = secureUrl;
     }
-    service.multipleImages = [...service.multipleImages, ...uploadedImages];
+  }
+
+  if (children !== undefined) {
+    service.children = typeof children === 'string' ? JSON.parse(children) : children;
   }
 
   const updatedService = await service.save();

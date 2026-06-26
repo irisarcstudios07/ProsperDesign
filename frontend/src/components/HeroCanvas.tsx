@@ -103,7 +103,7 @@ export default function HeroCanvas() {
   }, [loaded, images]);
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen bg-black overflow-hidden">
+    <section ref={containerRef} className="relative w-full h-screen bg-[#1D2B42] overflow-hidden">
       {!loaded && (
         <div className="absolute inset-0 flex items-center justify-center text-white z-20">
           Loading...
@@ -115,7 +115,7 @@ export default function HeroCanvas() {
       />
       
       {/* Overlay Content */}
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/40 text-center px-4">
+      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#1D2B42]/40 text-center px-4">
         <h1 className="text-5xl md:text-7xl font-bold tracking-wider text-white mb-4 uppercase">
           Prosper Design
         </h1>

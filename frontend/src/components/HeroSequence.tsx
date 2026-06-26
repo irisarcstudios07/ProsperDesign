@@ -108,16 +108,16 @@ export default function HeroSequence() {
 
   if (hasError) {
     return (
-      <div className="w-full h-screen bg-black flex items-center justify-center text-red-500 font-bold text-2xl">
+      <div className="w-full h-screen bg-[#1D2B42] flex items-center justify-center text-red-500 font-bold text-2xl">
         Frame loading error
       </div>
     );
   }
 
   return (
-    <section ref={containerRef} className="relative w-full h-screen bg-black overflow-hidden">
+    <section ref={containerRef} className="relative w-full h-screen bg-[#1D2B42] overflow-hidden">
       {!isLoaded && (
-        <div className="absolute inset-0 flex items-center justify-center text-white z-20 text-3xl font-bold bg-black">
+        <div className="absolute inset-0 flex items-center justify-center text-white z-20 text-3xl font-bold bg-[#1D2B42]">
           Loading... {loadedPercent}%
         </div>
       )}
@@ -129,7 +129,7 @@ export default function HeroSequence() {
       
       {/* Test Overlay */}
       {isLoaded && (
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-black/40 text-center px-4 pointer-events-none">
+        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[#1D2B42]/40 text-center px-4 pointer-events-none">
           <h1 className="text-5xl md:text-7xl font-bold tracking-wider text-white mb-4 uppercase">
             Prosper Design
           </h1>

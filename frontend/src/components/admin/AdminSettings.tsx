@@ -14,7 +14,8 @@ export default function AdminSettings() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    API.get('/settings').then(({ data }) => {
+    API.get('/settings').then(({ data: responseData }) => {
+      const data = responseData?.data || responseData || {};
       setForm({
         businessName: data.businessName || '',
         phone: data.phone || '',

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import API from '../api';
 
 export default function BookConsultation() {
@@ -6,6 +6,7 @@ export default function BookConsultation() {
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [projectType, setProjectType] = useState('');
+  const [subService, setSubService] = useState('');
   const [message, setMessage] = useState('');
 
   const [loading, setLoading] = useState(false);
@@ -13,6 +14,19 @@ export default function BookConsultation() {
   const [error, setError] = useState('');
   const [phoneError, setPhoneError] = useState('');
   const [emailError, setEmailError] = useState('');
+
+  // Auto-fill from URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const parent = params.get('parent');
+    const child = params.get('child');
+    if (parent) {
+      setProjectType(parent);
+    }
+    if (child) {
+      setSubService(child);
+    }
+  }, []);
 
   const validatePhone = (num: string) => {
     const indianPhoneRegex = /^(?:\+91)?[6-9]\d{9}$/;
@@ -46,20 +60,23 @@ export default function BookConsultation() {
 
     setLoading(true);
 
+    const fullServiceSelection = subService ? `${projectType} - ${subService}` : projectType;
+
     try {
       await API.post('/messages', {
         name,
         phone,
         email,
-        service: projectType,
+        service: fullServiceSelection,
         message,
-        subject: `Consultation Booking: ${projectType}`
+        subject: `Consultation Booking: ${fullServiceSelection}`
       });
       setSuccess(true);
       setName('');
       setPhone('');
       setEmail('');
       setProjectType('');
+      setSubService('');
       setMessage('');
     } catch (err: any) {
       console.log(err);
@@ -76,7 +93,7 @@ export default function BookConsultation() {
   };
 
   return (
-    <section className="py-24 md:py-32 relative bg-black text-white">
+    <section id="book-consultation" className="py-24 md:py-32 relative bg-[#1D2B42] text-white">
       {/* Luxury Background Overlay */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#d4af37]/10 rounded-full blur-[120px]"></div>
@@ -112,7 +129,7 @@ export default function BookConsultation() {
                   required
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors" 
+                  className="w-full bg-[#1D2B42]/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors" 
                   placeholder="Your Full Name" 
                 />
               </div>
@@ -123,7 +140,7 @@ export default function BookConsultation() {
                   required
                   value={phone}
                   onChange={e => setPhone(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors" 
+                  className="w-full bg-[#1D2B42]/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors" 
                   placeholder="+91 XXXXXXXXXX" 
                 />
                 {phoneError && <p className="text-red-500 text-xs mt-1">{phoneError}</p>}
@@ -138,7 +155,7 @@ export default function BookConsultation() {
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors" 
+                  className="w-full bg-[#1D2B42]/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors" 
                   placeholder="you@example.com" 
                 />
                 {emailError && <p className="text-red-500 text-xs mt-1">{emailError}</p>}
@@ -149,7 +166,7 @@ export default function BookConsultation() {
                   required
                   value={projectType}
                   onChange={e => setProjectType(e.target.value)}
-                  className="w-full bg-black/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors appearance-none"
+                  className="w-full bg-[#1D2B42]/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors appearance-none"
                 >
                   <option value="" className="text-gray-500">Select Project Type</option>
                   <option value="Constructions">Constructions</option>
@@ -157,9 +174,26 @@ export default function BookConsultation() {
                   <option value="Landscape">Landscape</option>
                   <option value="Water Bodies">Water Bodies</option>
                   <option value="Playstation">Playstation</option>
+                  {/* Keep custom parent options if admin adds others */}
+                  {projectType && !['Constructions', 'Interior Design', 'Landscape', 'Water Bodies', 'Playstation'].includes(projectType) && (
+                    <option value={projectType}>{projectType}</option>
+                  )}
                 </select>
               </div>
             </div>
+
+            {/* Read-only Sub Service selected from services */}
+            {subService && (
+              <div>
+                <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2 font-bold text-[#d4af37]">Selected Sub-Service (Auto-filled)</label>
+                <input 
+                  type="text" 
+                  readOnly
+                  value={subService}
+                  className="w-full bg-white/5 border border-[#d4af37]/30 rounded-lg py-3 px-4 text-[#d4af37] focus:outline-none cursor-default font-semibold"
+                />
+              </div>
+            )}
 
             <div>
               <label className="block text-xs uppercase tracking-widest text-gray-500 mb-2">Message *</label>
@@ -168,7 +202,7 @@ export default function BookConsultation() {
                 required
                 value={message}
                 onChange={e => setMessage(e.target.value)}
-                className="w-full bg-black/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors resize-none" 
+                className="w-full bg-[#1D2B42]/50 border border-white/10 rounded-lg py-3 px-4 text-white focus:outline-none focus:border-[#d4af37] transition-colors resize-none" 
                 placeholder="Briefly describe your project requirements..."
               ></textarea>
             </div>

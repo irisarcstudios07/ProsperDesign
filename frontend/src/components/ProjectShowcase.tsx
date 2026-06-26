@@ -27,9 +27,9 @@ export default function ProjectShowcase() {
     setError('');
     try {
       const { data } = await API.get('/projects');
-      // Show only visible projects if visibility is true, but since we retrieve all:
-      // Let's filter visible ones or show all that are returned
-      setProjects(data.filter((p: any) => p.visibility !== false));
+      const extractedData = data?.data || data;
+      const projectsArr = Array.isArray(extractedData) ? extractedData : [];
+      setProjects(projectsArr.filter((p: any) => p.visibility !== false));
     } catch (err) {
       setError('Failed to fetch projects');
     } finally {
@@ -97,8 +97,10 @@ export default function ProjectShowcase() {
 
   const activeProject = selectedIdx !== null ? projects[selectedIdx] : null;
 
+  const safeProjects = Array.isArray(projects) ? projects : [];
+
   return (
-    <section id="projects" ref={sectionRef} className="py-24 md:py-32 bg-[#2A4365] text-white">
+    <section id="projects" ref={sectionRef} className="py-24 md:py-32 bg-[#415C84] text-white">
       <div className="container mx-auto px-6 md:px-12">
         <h3 className="text-[#d4af37] text-sm font-bold uppercase tracking-widest mb-4 text-center">Featured Works</h3>
         <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-widest mb-20 text-center">
@@ -117,13 +119,13 @@ export default function ProjectShowcase() {
             <p className="mb-4">{error}</p>
             <button onClick={fetchProjects} className="bg-[#d4af37] text-black px-6 py-2 rounded font-bold hover:bg-white transition-colors">Retry</button>
           </div>
-        ) : projects.length === 0 ? (
-          <div className="bg-[#1A2A40] rounded-2xl border border-white/5 p-16 text-center text-gray-500 max-w-xl mx-auto">
+        ) : safeProjects.length === 0 ? (
+          <div className="bg-[#2A3F5C] rounded-2xl border border-white/5 p-16 text-center text-gray-500 max-w-xl mx-auto">
             No Projects Available
           </div>
         ) : (
           <div className="flex flex-col gap-16 md:gap-32">
-            {projects.map((project, idx) => {
+            {safeProjects.map((project, idx) => {
               const thumbUrl = project.thumbnail.startsWith('http') 
                 ? project.thumbnail 
                 : `${getBackendUrl()}/${project.thumbnail}`;
@@ -141,7 +143,7 @@ export default function ProjectShowcase() {
                     loading="lazy"
                     className="parallax-img absolute top-0 left-0 w-full h-[120%] object-cover transition-transform duration-1000 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors duration-500"></div>
+                  <div className="absolute inset-0 bg-[#1D2B42]/40 group-hover:bg-[#1D2B42]/60 transition-colors duration-500"></div>
                   
                   <div className="absolute inset-0 p-8 md:p-16 flex flex-col justify-between">
                     <div className="text-5xl md:text-8xl font-bold text-transparent [-webkit-text-stroke:1px_rgba(255,255,255,0.4)] opacity-50 group-hover:opacity-100 transition-opacity duration-500">
@@ -169,7 +171,7 @@ export default function ProjectShowcase() {
 
       {/* Lightbox / Video Modal */}
       {activeProject && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#1D2B42]/90 backdrop-blur-md">
           <button 
             onClick={() => setSelectedIdx(null)}
             className="absolute top-6 right-6 text-white hover:text-[#d4af37] transition-colors p-2 bg-white/10 rounded-full z-55"
@@ -191,8 +193,8 @@ export default function ProjectShowcase() {
             <FiChevronRight size={30} />
           </button>
 
-          <div className="w-full max-w-4xl bg-[#2A4365] border border-white/10 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-2xl relative">
-            <div className="w-full md:w-2/3 bg-black flex items-center justify-center min-h-[300px] md:min-h-[450px]">
+          <div className="w-full max-w-4xl bg-[#415C84] border border-white/10 rounded-2xl overflow-hidden flex flex-col md:flex-row shadow-2xl relative">
+            <div className="w-full md:w-2/3 bg-[#1D2B42] flex items-center justify-center min-h-[300px] md:min-h-[450px]">
               {activeProject.video ? (
                 <video
                   key={activeProject._id}

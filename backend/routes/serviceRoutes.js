@@ -21,9 +21,9 @@ const upload = multer({ storage });
 
 router.get('/', getServices);
 
-router.post('/', protect, upload.array('multipleImages', 10), createService);
+router.post('/', protect, upload.single('coverImage'), createService);
 
-router.put('/:id', protect, upload.array('multipleImages', 10), updateService);
+router.put('/:id', protect, upload.single('coverImage'), updateService);
 
 router.delete('/:id', protect, deleteService);
 

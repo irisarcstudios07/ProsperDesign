@@ -27,7 +27,7 @@ export class ErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div style={{ padding: "20px", color: "red", backgroundColor: "black", height: "100vh" }}>
+        <div style={{ padding: "20px", color: "red", backgroundColor: "#1D2B42", height: "100vh" }}>
           <h1>Something went wrong.</h1>
           <pre>{this.state.error?.message}</pre>
           <pre>{this.state.error?.stack}</pre>

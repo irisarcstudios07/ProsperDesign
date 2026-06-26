@@ -55,9 +55,13 @@ export default function AdminDashboard() {
             API.get('/messages'),
           ]);
 
-          const projects = projectsRes.data;
-          const services = servicesRes.data;
-          const messages = messagesRes.data;
+          const extractedProjects = projectsRes.data.data || projectsRes.data;
+          const extractedServices = servicesRes.data.data || servicesRes.data;
+          const extractedMessages = messagesRes.data.data || messagesRes.data;
+
+          const projects = Array.isArray(extractedProjects) ? extractedProjects : [];
+          const services = Array.isArray(extractedServices) ? extractedServices : [];
+          const messages = Array.isArray(extractedMessages) ? extractedMessages : [];
 
           setStats({
             projectsCount: projects.length,
