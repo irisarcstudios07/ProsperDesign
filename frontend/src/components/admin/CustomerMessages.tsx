@@ -41,7 +41,8 @@ export default function CustomerMessages() {
   const markRead = async (id: string) => {
     try {
       const { data } = await API.put(`/messages/${id}/read`);
-      setMessages(messages.map(m => m._id === id ? data : m));
+      const updatedMsg = data?.data || data;
+      setMessages(messages.map(m => m._id === id ? updatedMsg : m));
     } catch { setError('Failed to mark as read'); }
   };
 
@@ -109,7 +110,7 @@ export default function CustomerMessages() {
                   <button onClick={() => markRead(msg._id)} className="text-xs text-green-400 border border-green-400/30 px-3 py-1.5 rounded-lg hover:bg-green-400/10 transition-colors">✓ Mark as Read</button>
                 )}
                 <a href={`mailto:${msg.email}`} className="text-xs text-blue-400 border border-blue-400/30 px-3 py-1.5 rounded-lg hover:bg-blue-400/10 transition-colors">Reply via Email</a>
-                <a href={`https://wa.me/${msg.phone.replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="text-xs text-emerald-400 border border-emerald-400/30 px-3 py-1.5 rounded-lg hover:bg-emerald-400/10 transition-colors">WhatsApp</a>
+                <a href={`https://wa.me/${(msg.phone || '').replace(/\D/g, '')}`} target="_blank" rel="noreferrer" className="text-xs text-emerald-400 border border-emerald-400/30 px-3 py-1.5 rounded-lg hover:bg-emerald-400/10 transition-colors">WhatsApp</a>
                 <button onClick={() => deleteMsg(msg._id)} className="text-xs text-red-400 border border-red-400/30 px-3 py-1.5 rounded-lg hover:bg-red-400/10 transition-colors ml-auto">Delete</button>
               </div>
             </div>
