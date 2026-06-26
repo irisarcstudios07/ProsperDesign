@@ -74,18 +74,14 @@ export default function About() {
             </div>
             
             {/* Floating Counters */}
-            <div ref={countersRef} className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[110%] lg:-left-12 lg:translate-x-0 bg-[#1D2B42]/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 md:p-8 grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 shadow-2xl">
+            <div ref={countersRef} className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-[90%] md:w-[110%] lg:-left-12 lg:translate-x-0 bg-[#1D2B42]/80 backdrop-blur-xl border border-white/10 rounded-xl p-6 md:p-8 grid grid-cols-3 gap-4 md:gap-8 shadow-2xl">
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[#d4af37] mb-2 counter-val" data-target="250" data-suffix="+">0</div>
+                <div className="text-3xl md:text-4xl font-bold text-[#d4af37] mb-2 counter-val" data-target="150" data-suffix="+">0</div>
                 <div className="text-xs text-gray-400 uppercase tracking-widest">Projects Completed</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[#d4af37] mb-2 counter-val" data-target="100" data-suffix="+">0</div>
+                <div className="text-3xl md:text-4xl font-bold text-[#d4af37] mb-2 counter-val" data-target="50" data-suffix="+">0</div>
                 <div className="text-xs text-gray-400 uppercase tracking-widest">Happy Clients</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-[#d4af37] mb-2 counter-val" data-target="10" data-suffix="+">0</div>
-                <div className="text-xs text-gray-400 uppercase tracking-widest">Years Experience</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-[#d4af37] mb-2 counter-val" data-target="98" data-suffix="%">0</div>

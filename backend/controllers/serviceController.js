@@ -1,4 +1,4 @@
-﻿const Service = require('../models/Service');
+const Service = require('../models/Service');
 const asyncHandler = require('../middleware/asyncHandler');
 const { uploadImage } = require('../services/cloudinaryService');
 
@@ -69,7 +69,19 @@ const updateChildService = asyncHandler(async (req, res) => {
     const secureUrl = await uploadImage(req.file.path, 'prosper_design/services/children');
     if (secureUrl) child.coverImage = secureUrl;
   }
+
+  // Cover fallback logic
+  if (!child.coverImage && child.gallery && child.gallery.length > 0) {
+    child.coverImage = child.gallery[0].url;
+  }
+
   service.children[idx] = child;
+
+  // Parent cover fallback logic
+  if (!service.coverImage && service.children && service.children.length > 0) {
+    service.coverImage = service.children[0].coverImage;
+  }
+
   service.markModified('children');
   const saved = await service.save();
   res.json({ success: true, message: 'Child updated', data: saved });
@@ -88,10 +100,22 @@ const addGalleryImages = asyncHandler(async (req, res) => {
   const uploaded = [];
   for (const file of files) {
     const url = await uploadImage(file.path, 'prosper_design/services/gallery');
-    if (url) uploaded.push({ url, caption: file.originalname.replace(/\.[^.]+$/, '') });
+    if (url) uploaded.push({ url, caption: file.originalname.replace(/\.[^.]+$/, ''), description: '' });
   }
   child.gallery = [...(child.gallery || []), ...uploaded];
+
+  // Cover fallback logic
+  if (!child.coverImage && child.gallery.length > 0) {
+    child.coverImage = child.gallery[0].url;
+  }
+
   service.children[idx] = child;
+
+  // Parent cover fallback logic
+  if (!service.coverImage && service.children && service.children.length > 0) {
+    service.coverImage = service.children[0].coverImage;
+  }
+
   service.markModified('children');
   const saved = await service.save();
   res.json({ success: true, message: `${uploaded.length} image(s) added`, data: saved });
@@ -136,7 +160,36 @@ const reorderGallery = asyncHandler(async (req, res) => {
   res.json({ success: true, message: 'Gallery reordered', data: saved });
 });
 
+// @desc    Update a gallery image details (caption & description)
+// @route   PUT /api/services/:id/children/:childIdx/gallery/:imgIdx
+const updateGalleryImage = asyncHandler(async (req, res) => {
+  const service = await Service.findById(req.params.id);
+  if (!service) return res.status(404).json({ success: false, message: 'Service not found' });
+  const idx = parseInt(req.params.childIdx, 10);
+  const imgIdx = parseInt(req.params.imgIdx, 10);
+  if (isNaN(idx) || idx < 0 || idx >= service.children.length)
+    return res.status(400).json({ success: false, message: 'Invalid child index' });
+  const child = service.children[idx];
+  if (!child.gallery || isNaN(imgIdx) || imgIdx < 0 || imgIdx >= child.gallery.length)
+    return res.status(400).json({ success: false, message: 'Invalid image index' });
+  
+  const { caption, description } = req.body;
+  if (caption !== undefined) child.gallery[imgIdx].caption = caption;
+  if (description !== undefined) child.gallery[imgIdx].description = description;
+
+  // Cover fallback if cover image is empty
+  if (!child.coverImage && child.gallery.length > 0) {
+    child.coverImage = child.gallery[0].url;
+  }
+
+  service.children[idx] = child;
+  service.markModified('children');
+  const saved = await service.save();
+  res.json({ success: true, message: 'Gallery image updated', data: saved });
+});
+
 module.exports = {
   getServices, createService, updateService, deleteService,
-  updateChildService, addGalleryImages, deleteGalleryImage, reorderGallery
+  updateChildService, addGalleryImages, deleteGalleryImage, reorderGallery,
+  updateGalleryImage
 };

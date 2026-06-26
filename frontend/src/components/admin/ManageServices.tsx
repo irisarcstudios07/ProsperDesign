@@ -1,8 +1,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import API from '../../api';
-import type { Service, ChildService, GalleryImage } from '../../types';
+import type { Service, ChildService } from '../../types';
 
 type AdminLevel = 'parents' | 'children' | 'child-detail';
+
+const cleanTitle = (caption: string) => {
+  let name = caption.replace(/\.[^/.]+$/, ""); // Remove extension
+  name = name.replace(/\d+$/, ""); // Remove trailing numbers
+  name = name.trim();
+  name = name.replace(/[_-]/g, " ");
+  // Title case conversion
+  return name
+    .split(/\s+/)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(" ");
+};
+
+interface GroupedItem {
+  url: string;
+  caption?: string;
+  description?: string;
+  originalIndex: number;
+}
 
 export default function ManageServices() {
   const [services, setServices] = useState<Service[]>([]);
@@ -35,6 +54,19 @@ export default function ManageServices() {
   const [childCoverFile, setChildCoverFile] = useState<File | null>(null);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [uploadingGallery, setUploadingGallery] = useState(false);
+
+  // Image editing modal
+  const [showImageModal, setShowImageModal] = useState(false);
+  const [editingImageIdx, setEditingImageIdx] = useState<number | null>(null);
+  const [editingImageUrl, setEditingImageUrl] = useState('');
+  const [editingCaption, setEditingCaption] = useState('');
+  const [editingDescription, setEditingDescription] = useState('');
+
+  // Group editing modal
+  const [showGroupModal, setShowGroupModal] = useState(false);
+  const [groupEditingTitle, setGroupEditingTitle] = useState('');
+  const [groupEditingDescription, setGroupEditingDescription] = useState('');
+  const [groupEditingItems, setGroupEditingItems] = useState<GroupedItem[]>([]);
 
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
@@ -235,6 +267,7 @@ export default function ManageServices() {
     const swapIdx = direction === 'up' ? imgIdx - 1 : imgIdx + 1;
     if (swapIdx < 0 || swapIdx >= gallery.length) return;
     [gallery[imgIdx], gallery[swapIdx]] = [gallery[swapIdx], gallery[imgIdx]];
+    
     // reconstruct order relative to original
     const originalGallery = child.gallery || [];
     const newOrder = gallery.map(item => originalGallery.findIndex(g => g.url === item.url));
@@ -243,6 +276,74 @@ export default function ManageServices() {
       await fetchServices();
     } catch {
       setError('Reorder failed');
+    }
+  };
+
+  // ── INDIVIDUAL IMAGE EDIT ─────────────────────────────────────
+
+  const handleOpenImageEditModal = (imgIdx: number, url: string, caption: string, desc: string) => {
+    setEditingImageIdx(imgIdx);
+    setEditingImageUrl(url);
+    setEditingCaption(caption);
+    setEditingDescription(desc);
+    setShowImageModal(true);
+  };
+
+  const handleSaveImageDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeParent || activeChildIdx === null || editingImageIdx === null) return;
+    setSaving(true);
+    setError('');
+    try {
+      await API.put(`/services/${activeParent._id}/children/${activeChildIdx}/gallery/${editingImageIdx}`, {
+        caption: editingCaption,
+        description: editingDescription
+      });
+      showSuccess('Image details saved');
+      setShowImageModal(false);
+      await fetchServices();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Save image details failed');
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  // ── GROUP EDIT ───────────────────────────────────────────────
+
+  const handleOpenGroupEditModal = (groupKey: string, items: GroupedItem[]) => {
+    setGroupEditingTitle(groupKey);
+    const desc = items.find(it => it.description && it.description.trim().length > 0)?.description || '';
+    setGroupEditingDescription(desc);
+    setGroupEditingItems(items);
+    setShowGroupModal(true);
+  };
+
+  const handleSaveGroupDetails = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!activeParent || activeChildIdx === null || groupEditingItems.length === 0) return;
+    setSaving(true);
+    setError('');
+    try {
+      // Loop through all images inside the group and update them.
+      for (const item of groupEditingItems) {
+        // Build individual caption suffix to keep them unique (e.g. Japanese Garden 1, Japanese Garden 2)
+        const itemIdxInGroup = groupEditingItems.indexOf(item);
+        const suffix = groupEditingItems.length > 1 ? ` ${itemIdxInGroup + 1}` : '';
+        const newCaption = `${groupEditingTitle}${suffix}`;
+
+        await API.put(`/services/${activeParent._id}/children/${activeChildIdx}/gallery/${item.originalIndex}`, {
+          caption: newCaption,
+          description: groupEditingDescription
+        });
+      }
+      showSuccess('Group details saved successfully');
+      setShowGroupModal(false);
+      await fetchServices();
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Save group details failed');
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -262,10 +363,29 @@ export default function ManageServices() {
   const activeChild: ChildService | null =
     activeParent && activeChildIdx !== null ? activeParent.children[activeChildIdx] : null;
 
+  // Group active child gallery images by cleaned caption
+  const groupedGalleryMap: { [key: string]: GroupedItem[] } = {};
+  if (activeChild && activeChild.gallery) {
+    activeChild.gallery.forEach((img, imgIdx) => {
+      const cap = img.caption || '';
+      const groupTitle = cleanTitle(cap) || activeChild.title || 'General';
+      if (!groupedGalleryMap[groupTitle]) {
+        groupedGalleryMap[groupTitle] = [];
+      }
+      groupedGalleryMap[groupTitle].push({
+        url: img.url,
+        caption: img.caption,
+        description: img.description,
+        originalIndex: imgIdx
+      });
+    });
+  }
+  const groupedKeys = Object.keys(groupedGalleryMap);
+
   if (loading) return <div className="text-gray-400 py-10 text-center">Loading services...</div>;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-white bg-[#0f172a] p-6 rounded-2xl border border-white/5">
       {/* Page Header */}
       <div className="flex flex-wrap justify-between items-center gap-4 mb-2">
         <div className="flex items-center gap-3 flex-wrap">
@@ -275,9 +395,9 @@ export default function ManageServices() {
                 if (adminLevel === 'child-detail') { setAdminLevel('children'); setActiveChildIdx(null); }
                 else { setAdminLevel('parents'); setActiveParent(null); }
               }}
-              className="text-sm text-gray-400 hover:text-[#d4af37] transition-colors flex items-center gap-1"
+              className="text-sm text-gray-400 hover:text-[#d4af37] transition-colors flex items-center gap-1 bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/10"
             >
-              ←
+              ← Back
             </button>
           )}
           <h3 className="text-2xl font-bold text-[#d4af37]">
@@ -316,7 +436,7 @@ export default function ManageServices() {
       {adminLevel === 'parents' && (
         <div>
           {services.length === 0 ? (
-            <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-12 text-center text-gray-500">
+            <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-12 text-center text-gray-500">
               No categories yet. Click "+ Add Category" to get started.
             </div>
           ) : (
@@ -325,7 +445,7 @@ export default function ManageServices() {
                 <div
                   key={parent._id}
                   onClick={() => { setActiveParent(parent); setAdminLevel('children'); }}
-                  className="bg-[#1A2A40] rounded-2xl border border-white/10 overflow-hidden cursor-pointer hover:border-[#d4af37]/40 transition-colors group"
+                  className="bg-[#1E293B] rounded-2xl border border-white/10 overflow-hidden cursor-pointer hover:border-[#d4af37]/40 transition-colors group"
                 >
                   <div className="flex items-center gap-4 p-5 border-b border-white/5">
                     {parent.coverImage ? (
@@ -368,7 +488,7 @@ export default function ManageServices() {
       {adminLevel === 'children' && activeParent && (
         <div>
           {activeParent.children.length === 0 ? (
-            <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-12 text-center text-gray-500">
+            <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-12 text-center text-gray-500">
               No child services yet. Click "+ Add Child Service" to add one.
             </div>
           ) : (
@@ -377,7 +497,7 @@ export default function ManageServices() {
                 <div
                   key={idx}
                   onClick={() => { setActiveChildIdx(idx); setAdminLevel('child-detail'); }}
-                  className="bg-[#1A2A40] rounded-2xl border border-white/10 overflow-hidden cursor-pointer hover:border-[#d4af37]/40 transition-colors group"
+                  className="bg-[#1E293B] rounded-2xl border border-white/10 overflow-hidden cursor-pointer hover:border-[#d4af37]/40 transition-colors group"
                 >
                   <div className="relative h-40 bg-white/5">
                     {child.coverImage ? (
@@ -428,7 +548,7 @@ export default function ManageServices() {
 
           {/* LEFT: Metadata Editor */}
           <div className="space-y-6">
-            <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-6 space-y-5">
+            <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-6 space-y-5">
               <h4 className="text-white font-bold text-base border-b border-white/5 pb-3">Service Details</h4>
 
               <div>
@@ -437,7 +557,7 @@ export default function ManageServices() {
                   type="text"
                   value={childTitle}
                   onChange={e => setChildTitle(e.target.value)}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none text-sm"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none text-sm"
                 />
               </div>
 
@@ -447,7 +567,7 @@ export default function ManageServices() {
                   rows={4}
                   value={childDescription}
                   onChange={e => setChildDescription(e.target.value)}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none resize-none text-sm leading-relaxed"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none resize-none text-sm leading-relaxed"
                 />
               </div>
 
@@ -468,7 +588,7 @@ export default function ManageServices() {
                     onChange={e => setFeatureInput(e.target.value)}
                     onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); addFeature(); } }}
                     placeholder="Add feature & press Enter"
-                    className="flex-1 bg-[#2A4365] border border-white/20 rounded-lg px-3 py-2 text-white focus:border-[#d4af37] focus:outline-none text-sm"
+                    className="flex-1 bg-[#334155] border border-white/20 rounded-lg px-3 py-2 text-white focus:border-[#d4af37] focus:outline-none text-sm"
                   />
                   <button onClick={addFeature} className="bg-[#d4af37]/20 border border-[#d4af37]/30 text-[#d4af37] px-3 py-2 rounded-lg text-sm hover:bg-[#d4af37]/30 transition-colors">
                     +
@@ -477,7 +597,7 @@ export default function ManageServices() {
               </div>
 
               <div>
-                <label className="text-gray-400 text-xs uppercase tracking-wider block mb-1.5">Cover Image</label>
+                <label className="text-gray-400 text-xs uppercase tracking-wider block mb-1.5">Cover Image (Main Card Cover)</label>
                 {activeChild.coverImage && (
                   <img src={activeChild.coverImage} alt="Cover" className="w-full h-32 object-cover rounded-lg border border-white/10 mb-2" />
                 )}
@@ -485,9 +605,10 @@ export default function ManageServices() {
                   type="file"
                   accept="image/*"
                   onChange={e => setChildCoverFile(e.target.files?.[0] || null)}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-xs"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-xs"
                 />
                 {childCoverFile && <p className="text-green-400 text-xs mt-1">✓ {childCoverFile.name}</p>}
+                <p className="text-gray-500 text-[10px] mt-1">If cover image is empty, the first image inside the gallery will be used automatically.</p>
               </div>
 
               <button
@@ -500,23 +621,23 @@ export default function ManageServices() {
             </div>
           </div>
 
-          {/* RIGHT: Gallery Manager */}
+          {/* RIGHT: Grouped Gallery Manager */}
           <div className="space-y-6">
-            <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-6 space-y-5">
+            <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-6 space-y-5">
               <h4 className="text-white font-bold text-base border-b border-white/5 pb-3">
-                Gallery · {activeChild.gallery?.length || 0} Images
+                Gallery Manager ({activeChild.gallery?.length || 0} Images)
               </h4>
 
               {/* Upload */}
               <div className="space-y-2">
-                <label className="text-gray-400 text-xs uppercase tracking-wider block">Upload Gallery Images</label>
+                <label className="text-gray-400 text-xs uppercase tracking-wider block font-semibold text-[#d4af37]">Upload Gallery Images</label>
                 <input
                   ref={galleryInputRef}
                   type="file"
                   accept="image/*"
                   multiple
                   onChange={e => setGalleryFiles(Array.from(e.target.files || []))}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-xs"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-xs"
                 />
                 {galleryFiles.length > 0 && (
                   <div className="flex items-center justify-between">
@@ -530,48 +651,70 @@ export default function ManageServices() {
                     </button>
                   </div>
                 )}
+                <p className="text-gray-500 text-[10px]">Filenames like "Japanese Garden 1.jpg" will be grouped under "Japanese Garden" automatically.</p>
               </div>
 
-              {/* Gallery Grid */}
-              {(!activeChild.gallery || activeChild.gallery.length === 0) ? (
+              {/* Grouped Gallery Rendering */}
+              {groupedKeys.length === 0 ? (
                 <div className="text-center text-gray-500 text-sm py-8 border border-dashed border-white/10 rounded-xl">
                   No gallery images yet. Upload images above.
                 </div>
               ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {(activeChild.gallery as GalleryImage[]).map((img, imgIdx) => (
-                    <div key={imgIdx} className="relative group rounded-xl overflow-hidden bg-white/5 border border-white/10" style={{ aspectRatio: '4/3' }}>
-                      <img src={img.url} alt={img.caption || `Image ${imgIdx + 1}`} className="w-full h-full object-cover" />
-                      {/* Overlay controls */}
-                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 p-2">
-                        <div className="flex gap-1">
+                <div className="space-y-5 max-h-[60vh] overflow-y-auto pr-1">
+                  {groupedKeys.map((groupKey) => {
+                    const items = groupedGalleryMap[groupKey];
+                    return (
+                      <div key={groupKey} className="bg-white/5 p-4 rounded-xl border border-white/5 space-y-3">
+                        <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                          <div>
+                            <h5 className="text-[#d4af37] font-bold text-sm tracking-wide">{groupKey}</h5>
+                            <span className="text-[10px] text-gray-400">{items.length} photo{items.length !== 1 ? 's' : ''}</span>
+                          </div>
                           <button
-                            onClick={() => handleMoveGalleryImage(imgIdx, 'up')}
-                            disabled={imgIdx === 0}
-                            className="w-7 h-7 rounded bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white text-xs transition-colors flex items-center justify-center"
-                            title="Move Up"
-                          >↑</button>
-                          <button
-                            onClick={() => handleMoveGalleryImage(imgIdx, 'down')}
-                            disabled={imgIdx === (activeChild.gallery?.length || 0) - 1}
-                            className="w-7 h-7 rounded bg-white/20 hover:bg-white/40 disabled:opacity-30 text-white text-xs transition-colors flex items-center justify-center"
-                            title="Move Down"
-                          >↓</button>
+                            type="button"
+                            onClick={() => handleOpenGroupEditModal(groupKey, items)}
+                            className="text-[10px] text-blue-400 border border-blue-400/20 px-2 py-1 rounded bg-blue-400/5 hover:bg-blue-400/10 transition-colors"
+                          >
+                            Edit Group Details
+                          </button>
                         </div>
-                        <button
-                          onClick={() => handleDeleteGalleryImage(imgIdx)}
-                          className="bg-red-500/80 hover:bg-red-500 text-white text-[10px] px-3 py-1 rounded-full transition-colors font-semibold"
-                        >
-                          Delete
-                        </button>
-                        <p className="text-white/70 text-[9px] text-center truncate w-full">{img.caption || `Image ${imgIdx + 1}`}</p>
+
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {items.map((item) => (
+                            <div key={item.originalIndex} className="relative group rounded-lg overflow-hidden bg-black/30 border border-white/10" style={{ aspectRatio: '4/3' }}>
+                              <img src={item.url} alt={item.caption || 'Gallery Image'} className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-black/75 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col justify-center items-center gap-1.5 p-1.5">
+                                <div className="flex gap-1">
+                                  <button
+                                    onClick={() => handleMoveGalleryImage(item.originalIndex, 'up')}
+                                    disabled={item.originalIndex === 0}
+                                    className="w-5 h-5 rounded bg-white/20 disabled:opacity-30 text-white text-[10px] flex items-center justify-center"
+                                  >↑</button>
+                                  <button
+                                    onClick={() => handleMoveGalleryImage(item.originalIndex, 'down')}
+                                    disabled={item.originalIndex === (activeChild.gallery?.length || 0) - 1}
+                                    className="w-5 h-5 rounded bg-white/20 disabled:opacity-30 text-white text-[10px] flex items-center justify-center"
+                                  >↓</button>
+                                </div>
+                                <button
+                                  onClick={() => handleOpenImageEditModal(item.originalIndex, item.url, item.caption || '', item.description || '')}
+                                  className="w-full bg-blue-500 hover:bg-blue-600 text-white text-[9px] py-0.5 rounded transition-colors font-semibold"
+                                >
+                                  Edit Text
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteGalleryImage(item.originalIndex)}
+                                  className="w-full bg-red-500 hover:bg-red-600 text-white text-[9px] py-0.5 rounded transition-colors font-semibold"
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                      {/* Index badge */}
-                      <div className="absolute top-1 left-1 bg-black/60 text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center font-bold">
-                        {imgIdx + 1}
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
@@ -582,7 +725,7 @@ export default function ManageServices() {
       {/* ── PARENT MODAL ─────────────────────────────────────── */}
       {showParentModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-8 w-full max-w-md">
+          <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-8 w-full max-w-md">
             <h4 className="text-xl font-bold text-[#d4af37] mb-6">
               {editingParent ? 'Edit Category' : 'New Parent Category'}
             </h4>
@@ -594,7 +737,7 @@ export default function ManageServices() {
                   type="text"
                   value={parentTitle}
                   onChange={e => setParentTitle(e.target.value)}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none"
                 />
               </div>
               <div>
@@ -604,7 +747,7 @@ export default function ManageServices() {
                   placeholder="https://..."
                   value={parentCoverUrl}
                   onChange={e => setParentCoverUrl(e.target.value)}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none"
                 />
               </div>
               <div>
@@ -613,9 +756,10 @@ export default function ManageServices() {
                   type="file"
                   accept="image/*"
                   onChange={e => setParentCoverFile(e.target.files?.[0] || null)}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-sm"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-3 py-2 text-gray-400 text-sm"
                 />
                 {parentCoverFile && <p className="text-green-400 text-xs mt-1">✓ {parentCoverFile.name}</p>}
+                <p className="text-gray-500 text-[10px] mt-1">If cover image is empty, the cover image of the first child service will be used automatically.</p>
               </div>
               <div className="flex gap-3 pt-2">
                 <button type="submit" disabled={saving} className="flex-1 bg-[#d4af37] text-black font-bold py-2.5 rounded-xl hover:bg-white transition-colors disabled:opacity-50">
@@ -633,7 +777,7 @@ export default function ManageServices() {
       {/* ── ADD CHILD MODAL ──────────────────────────────────── */}
       {showAddChildModal && (
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-[#1A2A40] rounded-2xl border border-white/10 p-8 w-full max-w-md">
+          <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-8 w-full max-w-md">
             <h4 className="text-xl font-bold text-[#d4af37] mb-6">
               Add Child Service to <span className="text-white">{activeParent?.title}</span>
             </h4>
@@ -646,7 +790,7 @@ export default function ManageServices() {
                   placeholder="e.g. Japanese Garden"
                   value={newChildTitle}
                   onChange={e => setNewChildTitle(e.target.value)}
-                  className="w-full bg-[#2A4365] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2.5 text-white focus:border-[#d4af37] focus:outline-none"
                 />
               </div>
               <p className="text-gray-500 text-xs">You can add cover image, description, features, and gallery images after creating the service.</p>
@@ -655,6 +799,94 @@ export default function ManageServices() {
                   {saving ? 'Creating...' : 'Create'}
                 </button>
                 <button type="button" onClick={() => setShowAddChildModal(false)} className="flex-1 border border-white/20 text-gray-400 py-2.5 rounded-xl hover:bg-white/5 transition-colors">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── IMAGE TEXT MODAL ──────────────────────────────────── */}
+      {showImageModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-8 w-full max-w-md space-y-4">
+            <h4 className="text-xl font-bold text-[#d4af37]">Edit Image Details</h4>
+            
+            {editingImageUrl && (
+              <img src={editingImageUrl} alt="Preview" className="w-full h-36 object-cover rounded-lg border border-white/10" />
+            )}
+
+            <form onSubmit={handleSaveImageDetails} className="space-y-4">
+              <div>
+                <label className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Image Caption</label>
+                <input
+                  type="text"
+                  value={editingCaption}
+                  onChange={e => setEditingCaption(e.target.value)}
+                  placeholder="e.g. Japanese Garden 1"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Image Description (shows in lightbox)</label>
+                <textarea
+                  rows={3}
+                  value={editingDescription}
+                  onChange={e => setEditingDescription(e.target.value)}
+                  placeholder="Details about this design..."
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none text-sm leading-relaxed"
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button type="submit" disabled={saving} className="flex-1 bg-[#d4af37] text-black font-bold py-2 rounded-xl hover:bg-white transition-colors disabled:opacity-50 text-sm">
+                  {saving ? 'Saving...' : 'Save'}
+                </button>
+                <button type="button" onClick={() => setShowImageModal(false)} className="flex-1 border border-white/20 text-gray-400 py-2 rounded-xl hover:bg-white/5 transition-colors text-sm">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ── GROUP EDIT MODAL ──────────────────────────────────── */}
+      {showGroupModal && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+          <div className="bg-[#1E293B] rounded-2xl border border-white/10 p-8 w-full max-w-md space-y-4">
+            <div>
+              <h4 className="text-xl font-bold text-[#d4af37]">Edit Design Group</h4>
+              <p className="text-[10px] text-gray-400 mt-1">Updates title and description for all {groupEditingItems.length} images in this group.</p>
+            </div>
+
+            <form onSubmit={handleSaveGroupDetails} className="space-y-4">
+              <div>
+                <label className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Group Title *</label>
+                <input
+                  required
+                  type="text"
+                  value={groupEditingTitle}
+                  onChange={e => setGroupEditingTitle(e.target.value)}
+                  placeholder="e.g. Japanese Garden"
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none text-sm"
+                />
+              </div>
+              <div>
+                <label className="text-gray-400 text-xs uppercase tracking-wider block mb-1">Group Description</label>
+                <textarea
+                  rows={4}
+                  value={groupEditingDescription}
+                  onChange={e => setGroupEditingDescription(e.target.value)}
+                  placeholder="Rich description for this design group..."
+                  className="w-full bg-[#334155] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none text-sm leading-relaxed"
+                />
+              </div>
+              <div className="flex gap-3 pt-2">
+                <button type="submit" disabled={saving} className="flex-1 bg-[#d4af37] text-black font-bold py-2 rounded-xl hover:bg-white transition-colors disabled:opacity-50 text-sm">
+                  {saving ? 'Saving...' : 'Save Group Info'}
+                </button>
+                <button type="button" onClick={() => setShowGroupModal(false)} className="flex-1 border border-white/20 text-gray-400 py-2 rounded-xl hover:bg-white/5 transition-colors text-sm">
                   Cancel
                 </button>
               </div>

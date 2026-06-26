@@ -11,6 +11,7 @@ const {
   addGalleryImages,
   deleteGalleryImage,
   reorderGallery,
+  updateGalleryImage
 } = require('../controllers/serviceController');
 
 const storage = multer.diskStorage({
@@ -28,8 +29,9 @@ router.delete('/:id', protect, deleteService);
 // Child metadata update (title, description, features, coverImage)
 router.put('/:id/children/:childIdx', protect, upload.single('coverImage'), updateChildService);
 
-// Gallery operations (must come before /:id routes to avoid conflicts)
+// Gallery operations
 router.post('/:id/children/:childIdx/gallery', protect, upload.array('gallery', 20), addGalleryImages);
+router.put('/:id/children/:childIdx/gallery/:imgIdx', protect, updateGalleryImage);
 router.delete('/:id/children/:childIdx/gallery/:imgIdx', protect, deleteGalleryImage);
 router.put('/:id/children/:childIdx/gallery/reorder', protect, reorderGallery);
 

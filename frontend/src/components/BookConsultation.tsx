@@ -15,17 +15,24 @@ export default function BookConsultation() {
   const [phoneError, setPhoneError] = useState('');
   const [emailError, setEmailError] = useState('');
 
-  // Auto-fill from URL parameters
+  // Auto-fill from URL parameters & custom events
   useEffect(() => {
+    const handleAutofill = (e: CustomEvent<{ parent: string; child: string }>) => {
+      if (e.detail.parent) setProjectType(e.detail.parent);
+      if (e.detail.child) setSubService(e.detail.child);
+    };
+
+    window.addEventListener('autofill-booking' as any, handleAutofill);
+
     const params = new URLSearchParams(window.location.search);
     const parent = params.get('parent');
     const child = params.get('child');
-    if (parent) {
-      setProjectType(parent);
-    }
-    if (child) {
-      setSubService(child);
-    }
+    if (parent) setProjectType(parent);
+    if (child) setSubService(child);
+
+    return () => {
+      window.removeEventListener('autofill-booking' as any, handleAutofill);
+    };
   }, []);
 
   const validatePhone = (num: string) => {

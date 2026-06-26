@@ -1,6 +1,6 @@
-﻿import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import type { GalleryImage } from '../../servicesConfig';
+import type { GalleryImage } from '../../types';
 
 interface LightboxProps {
   images: GalleryImage[];
@@ -63,8 +63,8 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }: 
           <AnimatePresence mode="wait">
             <motion.img
               key={currentIndex}
-              src={current.image}
-              alt={current.title}
+              src={current.url}
+              alt={current.caption || 'Gallery Image'}
               className="max-h-[75vh] max-w-full object-contain rounded-2xl shadow-2xl border border-white/10"
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -74,9 +74,9 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }: 
           </AnimatePresence>
 
           {/* Caption */}
-          {(current.title || current.description) && (
+          {(current.caption || current.description) && (
             <div className="mt-4 text-center">
-              <p className="text-white font-semibold text-sm tracking-wide">{current.title}</p>
+              <p className="text-white font-semibold text-sm tracking-wide">{current.caption}</p>
               {current.description && (
                 <p className="text-gray-400 text-xs mt-1 max-w-lg">{current.description}</p>
               )}
@@ -115,7 +115,7 @@ export default function Lightbox({ images, currentIndex, onClose, onNavigate }: 
                   i === currentIndex ? 'border-[#d4af37] scale-110' : 'border-white/20 opacity-50 hover:opacity-80'
                 }`}
               >
-                <img src={img.image} alt={img.title} className="w-full h-full object-cover" />
+                <img src={img.url} alt={img.caption || `Thumbnail ${i + 1}`} className="w-full h-full object-cover" />
               </button>
             ))}
           </div>

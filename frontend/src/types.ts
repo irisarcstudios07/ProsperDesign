@@ -3,6 +3,7 @@
 export interface GalleryImage {
   url: string;
   caption?: string;
+  description?: string;
 }
 
 export interface ChildService {

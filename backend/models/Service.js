@@ -2,7 +2,8 @@ const mongoose = require('mongoose');
 
 const GalleryImageSchema = new mongoose.Schema({
   url: { type: String, required: true },
-  caption: { type: String, default: '' }
+  caption: { type: String, default: '' },
+  description: { type: String, default: '' }
 }, { _id: false });
 
 const ChildServiceSchema = new mongoose.Schema({
