@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import Navbar from './components/Navbar';
 import HeroSequence from './components/HeroSequence';
@@ -19,7 +20,7 @@ import AdminDashboard from './pages/AdminDashboard';
 // Public Layout
 function PublicSite() {
   return (
-    <div id="home" className="bg-[#121212] min-h-screen text-white font-sans antialiased overflow-x-hidden">
+    <div id="home" className="bg-[#2A4365] min-h-screen text-white font-sans antialiased overflow-x-hidden">
       <Navbar />
       <HeroSequence />
       <About />
@@ -38,6 +39,7 @@ function PublicSite() {
 function App() {
   return (
     <ErrorBoundary>
+      <Toaster position="top-right" />
       <Router>
         <Routes>
           {/* Public Route */}

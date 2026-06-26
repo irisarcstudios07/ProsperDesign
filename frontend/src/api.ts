@@ -1,13 +1,20 @@
 import axios from 'axios';
-
-console.log("ENV =", import.meta.env);
-console.log("API URL =", import.meta.env.VITE_API_URL);
+import axiosRetry from 'axios-retry';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://prosperdesign17.onrender.com/api';
 
 const API = axios.create({ 
   baseURL: API_BASE_URL,
   withCredentials: true 
+});
+
+// Add retry support for failed requests (e.g. transient network errors)
+axiosRetry(API, {
+  retries: 3,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition: (error) => {
+    return axiosRetry.isNetworkOrIdempotentRequestError(error) || (error.response?.status ?? 0) >= 500;
+  }
 });
 
 API.interceptors.request.use((config) => {
@@ -31,8 +38,7 @@ API.interceptors.response.use(
 );
 
 export const getBackendUrl = () => {
-  const url = import.meta.env.VITE_API_URL || 'https://prosperdesign17.onrender.com/api';
-  return url.replace(/\/api$/, '');
+  return API_BASE_URL.replace(/\/api$/, '');
 };
 
 export default API;

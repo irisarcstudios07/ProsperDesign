@@ -10,6 +10,7 @@ interface Project {
   category: string;
   thumbnail: string;
   video: string;
+  images?: string[];
   featured: boolean;
   visibility: boolean;
 }
@@ -23,6 +24,7 @@ export default function ManageProjects() {
     title: '',
     description: '',
     category: 'Landscape',
+    urlImages: '',
     featured: false,
     visibility: true,
   });
@@ -46,7 +48,7 @@ export default function ManageProjects() {
 
   const openAdd = () => {
     setEditingProject(null);
-    setFormData({ title: '', description: '', category: 'Landscape', featured: false, visibility: true });
+    setFormData({ title: '', description: '', category: 'Landscape', urlImages: '', featured: false, visibility: true });
     setThumbnailFile(null);
     setVideoFile(null);
     setShowForm(true);
@@ -54,7 +56,7 @@ export default function ManageProjects() {
 
   const openEdit = (p: Project) => {
     setEditingProject(p);
-    setFormData({ title: p.title, description: p.description || '', category: p.category, featured: p.featured, visibility: p.visibility });
+    setFormData({ title: p.title, description: p.description || '', category: p.category, urlImages: p.images ? p.images.join('\n') : '', featured: p.featured, visibility: p.visibility });
     setThumbnailFile(null);
     setVideoFile(null);
     setShowForm(true);
@@ -69,6 +71,10 @@ export default function ManageProjects() {
       fd.append('title', formData.title);
       fd.append('description', formData.description);
       fd.append('category', formData.category);
+      
+      const urlList = formData.urlImages.split('\n').map(u => u.trim()).filter(Boolean);
+      fd.append('urlImages', JSON.stringify(urlList));
+      
       fd.append('featured', String(formData.featured));
       fd.append('visibility', String(formData.visibility));
 
@@ -137,6 +143,13 @@ export default function ManageProjects() {
                 <label className="text-gray-400 text-sm block mb-1">Description</label>
                 <textarea rows={3} value={formData.description} onChange={e => setFormData(p => ({...p, description: e.target.value}))}
                   className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none" />
+              </div>
+
+              <div>
+                <label className="text-gray-400 text-sm block mb-1">Additional Image URLs (One per line)</label>
+                <textarea rows={3} value={formData.urlImages} onChange={e => setFormData(p => ({...p, urlImages: e.target.value}))}
+                  placeholder="https://cloudinary.com/image1.jpg&#10;https://cloudinary.com/image2.jpg"
+                  className="w-full bg-[#121212] border border-white/20 rounded-lg px-4 py-2 text-white focus:border-[#d4af37] focus:outline-none resize-none placeholder-gray-600" />
               </div>
 
               {/* Thumbnail */}

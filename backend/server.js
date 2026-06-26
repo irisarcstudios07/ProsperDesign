@@ -8,7 +8,9 @@ const morgan = require('morgan');
 const dotenv = require('dotenv');
 const fs = require('fs');
 const path = require('path');
+const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
+const errorHandler = require('./middleware/errorHandler');
 
 // Configure environment variables (support .env.local or standard .env)
 const localEnvPath = path.join(__dirname, '.env.local');
@@ -27,10 +29,19 @@ fs.mkdirSync(path.join(__dirname, 'uploads', 'videos'), { recursive: true });
 
 const app = express();
 
-// Middleware
+// Security and Rate Limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 200, // Limit each IP to 200 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+
 app.use(helmet({
   crossOriginResourcePolicy: false, // Allow loading media from local static uploads
 }));
+app.use(limiter);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -64,20 +75,24 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: "Backend running successfully"
+    message: "Backend running successfully",
+    data: null
   });
 });
 
 app.get('/health', (req, res) => {
   res.json({
-    status: "ok"
+    success: true,
+    message: "Health OK",
+    data: { status: "ok" }
   });
 });
 
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
-    status: "ok"
+    message: "API Health OK",
+    data: { status: "ok" }
   });
 });
 
@@ -89,13 +104,7 @@ app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/settings', require('./routes/settingRoutes'));
 
 // Global Error Handler
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({
-    success: false,
-    message: "Internal Server Error"
-  });
-});
+app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
