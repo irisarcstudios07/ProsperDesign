@@ -15,8 +15,11 @@ export default function AdminLogin() {
     setError('');
     try {
       const { data } = await API.post('/auth/login', { username, password });
-      localStorage.setItem('adminToken', data.token);
-      localStorage.setItem('token', data.token);
+      const token = data?.data?.token || data?.token;
+      if (token) {
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('token', token);
+      }
       navigate('/admin/dashboard');
     } catch (err: any) {
       console.log(err);
