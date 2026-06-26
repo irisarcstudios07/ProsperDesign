@@ -110,7 +110,7 @@ export default function BookConsultation() {
       <div className="container mx-auto px-6 md:px-12 relative z-10">
         <div className="max-w-4xl mx-auto bg-white/5 backdrop-blur-xl border border-white/10 p-8 md:p-16 rounded-3xl shadow-2xl">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-widest mb-4">Book Your Free Consultation</h2>
+            <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-widest mb-4">Get In Touch</h2>
             <p className="text-gray-400 font-light text-lg">Let's transform your ideas into reality.</p>
           </div>
 
@@ -226,9 +226,9 @@ export default function BookConsultation() {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
                     </svg>
-                    Booking...
+                    Submitting...
                   </>
-                ) : 'Book Consultation'}
+                ) : 'Click Here'}
               </button>
             </div>
           </form>

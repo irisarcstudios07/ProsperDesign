@@ -2,21 +2,22 @@ import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import API from '../api';
 import { servicesConfig } from '../servicesConfig';
-import type { Service, ChildService, GalleryImage } from '../types';
+import type { Service, ChildService } from '../types';
 import ParentGrid from './services/ParentGrid';
 import ChildGrid from './services/ChildGrid';
-import DesignGrid from './services/DesignGrid';
 import ServiceDetail from './services/ServiceDetail';
 
-type Level = 'parents' | 'children' | 'designs' | 'detail';
+type Level = 'parents' | 'children' | 'detail';
 
-interface GroupedDesign {
-  title: string;
-  coverImage: string;
-  count: number;
-  images: GalleryImage[];
-  description: string;
-}
+const getOrderIndex = (title: string) => {
+  const normalized = title.toLowerCase();
+  if (normalized.includes('interior')) return 0;
+  if (normalized.includes('exterior') || normalized.includes('landscaping')) return 1;
+  if (normalized.includes('pool') || normalized.includes('fountain')) return 2;
+  if (normalized.includes('play')) return 3;
+  if (normalized.includes('construction')) return 4;
+  return 999;
+};
 
 // Map the static public configurations to the database types as fallback
 const mapStaticToDbFormat = (): Service[] => {
@@ -29,11 +30,22 @@ const mapStaticToDbFormat = (): Service[] => {
       coverImage: sub.coverImage,
       description: sub.description,
       features: sub.features || [],
-      gallery: sub.gallery.map((img) => ({
-        url: img.image,
-        caption: img.title,
-        description: img.description || ''
-      }))
+      gallery: sub.gallery
+        .filter((img) => {
+          const name = img.image.split('/').pop()?.toLowerCase() || '';
+          return ![
+            "cover.jpg",
+            "cover.jpeg",
+            "cover.png",
+            "cover.webp",
+            "cover.avif"
+          ].includes(name);
+        })
+        .map((img) => ({
+          url: img.image,
+          caption: img.title,
+          description: img.description || ''
+        }))
     }))
   }));
 };
@@ -46,7 +58,6 @@ export default function Services() {
   const [level, setLevel] = useState<Level>('parents');
   const [selectedParent, setSelectedParent] = useState<Service | null>(null);
   const [selectedChild, setSelectedChild] = useState<ChildService | null>(null);
-  const [selectedDesign, setSelectedDesign] = useState<GroupedDesign | null>(null);
 
   useEffect(() => {
     const loadServices = async () => {
@@ -54,14 +65,19 @@ export default function Services() {
         const { data } = await API.get('/services');
         const extracted = data?.data || data;
         if (Array.isArray(extracted) && extracted.length > 0) {
-          setServices(extracted);
+          const sorted = [...extracted].sort((a, b) => getOrderIndex(a.title) - getOrderIndex(b.title));
+          setServices(sorted);
         } else {
           // Empty DB -> Fallback to static
-          setServices(mapStaticToDbFormat());
+          const mapped = mapStaticToDbFormat();
+          mapped.sort((a, b) => getOrderIndex(a.title) - getOrderIndex(b.title));
+          setServices(mapped);
         }
       } catch (err) {
         console.error("Failed to fetch database services, falling back to static config.", err);
-        setServices(mapStaticToDbFormat());
+        const mapped = mapStaticToDbFormat();
+        mapped.sort((a, b) => getOrderIndex(a.title) - getOrderIndex(b.title));
+        setServices(mapped);
       } finally {
         setLoading(false);
       }
@@ -76,11 +92,6 @@ export default function Services() {
 
   const handleChildSelect = (child: ChildService) => {
     setSelectedChild(child);
-    setLevel('designs');
-  };
-
-  const handleDesignSelect = (design: GroupedDesign) => {
-    setSelectedDesign(design);
     setLevel('detail');
   };
 
@@ -88,18 +99,11 @@ export default function Services() {
     setLevel('parents');
     setSelectedParent(null);
     setSelectedChild(null);
-    setSelectedDesign(null);
   };
 
   const handleBackToChildren = () => {
     setLevel('children');
     setSelectedChild(null);
-    setSelectedDesign(null);
-  };
-
-  const handleBackToDesigns = () => {
-    setLevel('designs');
-    setSelectedDesign(null);
   };
 
   if (loading) {
@@ -145,23 +149,11 @@ export default function Services() {
             />
           )}
 
-          {level === 'designs' && selectedParent && selectedChild && (
-            <DesignGrid
-              parent={selectedParent}
-              child={selectedChild}
-              onBack={handleBackToChildren}
-              onSelect={handleDesignSelect}
-            />
-          )}
-
-          {level === 'detail' && selectedParent && selectedChild && selectedDesign && (
+          {level === 'detail' && selectedParent && selectedChild && (
             <ServiceDetail
               parent={selectedParent}
               child={selectedChild}
-              designTitle={selectedDesign.title}
-              images={selectedDesign.images}
-              description={selectedDesign.description}
-              onBack={handleBackToDesigns}
+              onBack={handleBackToChildren}
             />
           )}
         </AnimatePresence>

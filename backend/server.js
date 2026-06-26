@@ -102,6 +102,7 @@ app.use('/api/projects', require('./routes/projectRoutes'));
 app.use('/api/services', require('./routes/serviceRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/settings', require('./routes/settingRoutes'));
+app.use('/api/clients', require('./routes/clientRoutes'));
 
 // Global Error Handler
 app.use(errorHandler);

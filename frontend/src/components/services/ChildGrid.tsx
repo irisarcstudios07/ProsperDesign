@@ -70,7 +70,7 @@ export default function ChildGrid({ parent, onBack, onSelect }: ChildGridProps) 
                     </p>
                   )}
                   <p className="text-[#d4af37] text-xs uppercase tracking-widest font-semibold flex items-center gap-1 group-hover:translate-x-2 transition-transform duration-300">
-                    Explore Designs →
+                    View Gallery →
                   </p>
                 </div>
               </motion.div>

@@ -4,6 +4,7 @@ import ManageProjects from '../components/admin/ManageProjects';
 import ManageServices from '../components/admin/ManageServices';
 import CustomerMessages from '../components/admin/CustomerMessages';
 import AdminSettings from '../components/admin/AdminSettings';
+import ManageClients from '../components/admin/ManageClients';
 import API, { getBackendUrl } from '../api';
 
 interface Message {
@@ -33,6 +34,7 @@ export default function AdminDashboard() {
     projectsCount: 0,
     servicesCount: 0,
     unreadMessages: 0,
+    clientsCount: 0,
   });
   const [recentProjects, setRecentProjects] = useState<Project[]>([]);
   const [recentMessages, setRecentMessages] = useState<Message[]>([]);
@@ -49,24 +51,28 @@ export default function AdminDashboard() {
     if (activeTab === 'dashboard') {
       const fetchDashboardData = async () => {
         try {
-          const [projectsRes, servicesRes, messagesRes] = await Promise.all([
+          const [projectsRes, servicesRes, messagesRes, clientsRes] = await Promise.all([
             API.get('/projects'),
             API.get('/services'),
             API.get('/messages'),
+            API.get('/clients'),
           ]);
 
           const extractedProjects = projectsRes.data.data || projectsRes.data;
           const extractedServices = servicesRes.data.data || servicesRes.data;
           const extractedMessages = messagesRes.data.data || messagesRes.data;
+          const extractedClients = clientsRes.data.data || clientsRes.data;
 
           const projects = Array.isArray(extractedProjects) ? extractedProjects : [];
           const services = Array.isArray(extractedServices) ? extractedServices : [];
           const messages = Array.isArray(extractedMessages) ? extractedMessages : [];
+          const clients = Array.isArray(extractedClients) ? extractedClients : [];
 
           setStats({
             projectsCount: projects.length,
             servicesCount: services.length,
             unreadMessages: messages.filter((m: any) => !m.readStatus).length,
+            clientsCount: clients.length,
           });
 
           setRecentProjects(projects.slice(0, 5));
@@ -136,18 +142,22 @@ export default function AdminDashboard() {
             </div>
 
             {/* Metrics cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('projects')}>
-                <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider font-semibold">Total Projects</h3>
-                <p className="text-5xl font-bold text-white">{stats.projectsCount}</p>
+                <h3 className="text-gray-400 text-xs mb-2 uppercase tracking-wider font-bold">Total Projects</h3>
+                <p className="text-4xl font-bold text-white">{stats.projectsCount}</p>
               </div>
               <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('services')}>
-                <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider font-semibold">Total Services</h3>
-                <p className="text-5xl font-bold text-white">{stats.servicesCount}</p>
+                <h3 className="text-gray-400 text-xs mb-2 uppercase tracking-wider font-bold">Total Services</h3>
+                <p className="text-4xl font-bold text-white">{stats.servicesCount}</p>
+              </div>
+              <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('clients')}>
+                <h3 className="text-gray-400 text-xs mb-2 uppercase tracking-wider font-bold">Total Clients</h3>
+                <p className="text-4xl font-bold text-white">{stats.clientsCount}</p>
               </div>
               <div className="bg-[#1A2A40] p-6 rounded-2xl border border-white/10 hover:border-[#d4af37]/35 transition-colors cursor-pointer" onClick={() => setActiveTab('messages')}>
-                <h3 className="text-gray-400 text-sm mb-2 uppercase tracking-wider font-semibold">Unread Messages</h3>
-                <p className="text-5xl font-bold text-white">{stats.unreadMessages}</p>
+                <h3 className="text-gray-400 text-xs mb-2 uppercase tracking-wider font-bold">Unread Messages</h3>
+                <p className="text-4xl font-bold text-white">{stats.unreadMessages}</p>
               </div>
             </div>
 
@@ -212,6 +222,8 @@ export default function AdminDashboard() {
         return <ManageProjects />;
       case 'services':
         return <ManageServices />;
+      case 'clients':
+        return <ManageClients />;
       case 'messages':
         return <CustomerMessages />;
       case 'settings':
@@ -231,6 +243,7 @@ export default function AdminDashboard() {
             { id: 'dashboard', label: 'Dashboard' },
             { id: 'projects', label: 'Projects' },
             { id: 'services', label: 'Services' },
+            { id: 'clients', label: 'Clients' },
             { id: 'messages', label: 'Messages' },
             { id: 'settings', label: 'Settings' }
           ].map((tab) => (

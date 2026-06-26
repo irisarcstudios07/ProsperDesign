@@ -22,3 +22,11 @@ export interface Service {
   createdAt?: string;
   updatedAt?: string;
 }
+
+export interface Client {
+  _id: string;
+  name: string;
+  order: number;
+  active: boolean;
+  createdAt?: string;
+}

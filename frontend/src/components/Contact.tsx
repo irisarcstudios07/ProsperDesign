@@ -87,17 +87,17 @@ export default function Contact() {
             
             <div className="space-y-8 mb-12">
               <div>
-                <h4 className="uppercase tracking-widest text-xs font-bold text-gray-500 mb-2">Phone</h4>
+                <h4 className="uppercase tracking-widest text-xs font-bold text-[#F8F8F8] opacity-90 mb-2">Phone</h4>
                 <p className="text-xl font-light">97005 21522</p>
               </div>
               <div>
-                <h4 className="uppercase tracking-widest text-xs font-bold text-gray-500 mb-2">Email</h4>
+                <h4 className="uppercase tracking-widest text-xs font-bold text-[#F8F8F8] opacity-90 mb-2">Email</h4>
                 <a href="mailto:prosperdesigns17@gmail.com" className="text-xl font-light hover:text-[#d4af37] transition-colors">
                   prosperdesigns17@gmail.com
                 </a>
               </div>
               <div>
-                <h4 className="uppercase tracking-widest text-xs font-bold text-gray-500 mb-2">Instagram</h4>
+                <h4 className="uppercase tracking-widest text-xs font-bold text-[#F8F8F8] opacity-90 mb-2">Instagram</h4>
                 <a 
                   href="https://www.instagram.com/prosper_designs17" 
                   target="_blank" 
@@ -109,7 +109,7 @@ export default function Contact() {
                 </a>
               </div>
               <div>
-                <h4 className="uppercase tracking-widest text-xs font-bold text-gray-500 mb-2">Address</h4>
+                <h4 className="uppercase tracking-widest text-xs font-bold text-[#F8F8F8] opacity-90 mb-2">Address</h4>
                 <a 
                   href="https://www.google.com/maps/place/Ballem+Vari+St,+Andhra+Pradesh/@16.515107,80.6799996,16.94z/data=!4m15!1m8!3m7!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!2sBallem+Vari+St,+Andhra+Pradesh!3b1!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x!3m5!1s0x3a35fb29025b5b11:0xee4b345d3024bc67!8m2!3d16.5151416!4d80.6827!16s%2Fg%2F11dfjpsw1x?authuser=0&entry=ttu&g_ep=EgoyMDI2MDYyMi4wIKXMDSoASAFQAw%3D%3D"
                   target="_blank"

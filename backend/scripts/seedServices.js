@@ -25,8 +25,9 @@ const SUPPORTED_EXTENSIONS = ['.jpg', '.jpeg', '.png', '.webp', '.avif'];
 const cleanTitle = (filename) => {
   let name = filename.replace(/\.[^/.]+$/, ""); // Remove extension
   name = name.replace(/\d+$/, ""); // Remove trailing numbers
-  name = name.trim();
   name = name.replace(/[_-]/g, " ");
+  name = name.replace(/([a-z])([A-Z])/g, "$1 $2"); // Split camelCase/PascalCase
+  name = name.trim();
   return name.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(" ");
 };
 
@@ -123,25 +124,31 @@ const seed = async () => {
           let childCoverUrl = '';
           const galleryData = [];
 
-          // Upload all gallery images first
+          // Upload cover first if it exists
+          if (coverFile) {
+            console.log(`    Uploading cover image: ${coverFile}...`);
+            try {
+              const imagePath = path.join(childPath, coverFile);
+              childCoverUrl = await uploadToCloudinary(imagePath, `prosper_design/services/${parent.folderName}/${childDir}`);
+            } catch (err) {
+              console.error(`    Failed to upload cover ${coverFile}:`, err.message);
+            }
+          }
+
+          // Upload all other gallery images
           for (const imageFile of imageFiles) {
+            if (imageFile === coverFile) continue;
+
             const imagePath = path.join(childPath, imageFile);
-            const isCover = imageFile === coverFile;
-            
             console.log(`    Uploading gallery image: ${imageFile}...`);
             try {
               const uploadedUrl = await uploadToCloudinary(imagePath, `prosper_design/services/${parent.folderName}/${childDir}`);
               
-              // Only add to gallery if it's not the standalone cover image, or keep it in gallery anyway
               galleryData.push({
                 url: uploadedUrl,
                 caption: cleanTitle(imageFile),
                 description: `Premium design execution of ${cleanTitle(imageFile)} under ${childDir}.`
               });
-
-              if (isCover) {
-                childCoverUrl = uploadedUrl;
-              }
             } catch (err) {
               console.error(`    Failed to upload ${imageFile}:`, err.message);
             }
@@ -170,9 +177,29 @@ const seed = async () => {
           return SUPPORTED_EXTENSIONS.includes(ext);
         });
 
+        // Search for cover image
+        const coverFile = imageFiles.find(file => {
+          const base = path.basename(file, path.extname(file)).toLowerCase();
+          return base === 'cover';
+        });
+
         if (imageFiles.length > 0) {
           const galleryData = [];
+          let defaultChildCoverUrl = '';
+
+          if (coverFile) {
+            console.log(`    Uploading cover image: ${coverFile}...`);
+            try {
+              const imagePath = path.join(parentPath, coverFile);
+              defaultChildCoverUrl = await uploadToCloudinary(imagePath, `prosper_design/services/${parent.folderName}`);
+            } catch (err) {
+              console.error(`    Failed to upload cover ${coverFile}:`, err.message);
+            }
+          }
+
           for (const imageFile of imageFiles) {
+            if (imageFile === coverFile) continue;
+
             const imagePath = path.join(parentPath, imageFile);
             console.log(`    Uploading image to default category: ${imageFile}...`);
             try {
@@ -187,9 +214,13 @@ const seed = async () => {
             }
           }
 
+          if (!defaultChildCoverUrl && galleryData.length > 0) {
+            defaultChildCoverUrl = galleryData[0].url;
+          }
+
           childrenData.push({
             title: `${parent.title} Projects`,
-            coverImage: galleryData[0]?.url || '',
+            coverImage: defaultChildCoverUrl,
             description: `Luxury custom ${parent.title.toLowerCase()} service execution by Prosper Design.`,
             features: ['Premium Build', 'Luxury Finishes', 'Structural Warranty'],
             gallery: galleryData
