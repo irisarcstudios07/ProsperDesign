@@ -15,7 +15,7 @@ export default function Footer() {
             </p>
             <div className="flex gap-4">
               <a href="https://www.instagram.com/prosper_designs17" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors" title="Instagram"><FiInstagram /></a>
-              <a href="https://wa.me/918143947374" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors" title="WhatsApp"><FaWhatsapp /></a>
+              <a href="https://wa.me/919700521522" target="_blank" rel="noopener noreferrer" className="w-10 h-10 flex items-center justify-center border border-white/20 rounded-full hover:bg-[#d4af37] hover:border-[#d4af37] hover:text-black transition-colors" title="WhatsApp"><FaWhatsapp /></a>
             </div>
           </div>
           
@@ -43,7 +43,10 @@ export default function Footer() {
           <div>
             <h4 className="uppercase tracking-widest font-bold mb-6 text-sm">Contact Info</h4>
             <ul className="space-y-4 font-light text-gray-400">
-              <li>81439 47374</li>
+              <li>
+                81439 47374<br />
+                97005 21522
+              </li>
               <li><a href="mailto:prosperdesigns17@gmail.com" className="hover:text-white transition-colors break-all">prosperdesigns17@gmail.com</a></li>
               <li className="pt-2">
                 BALLAM VARI STREET,<br />

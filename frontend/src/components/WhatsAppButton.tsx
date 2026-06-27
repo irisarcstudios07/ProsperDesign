@@ -27,7 +27,7 @@ export default function WhatsAppButton() {
 
   if (!isVisible) return null;
 
-  const phoneNumber = '918143947374';
+  const phoneNumber = '919700521522';
   const message = encodeURIComponent('Hi we came here from website ProsperDesign i want to connect with you prosper design for a service');
   const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
 

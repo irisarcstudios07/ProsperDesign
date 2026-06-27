@@ -89,9 +89,14 @@ export default function Contact() {
             <div className="space-y-8">
               <div>
                 <h4 className="uppercase tracking-widest text-xs font-bold text-white mb-2" style={{ color: '#FFFFFF' }}>Phone</h4>
-                <a href="tel:+918143947374" className="text-xl font-medium text-white hover:text-[#d4af37] transition-colors" style={{ color: '#FFFFFF' }}>
-                  81439 47374
-                </a>
+                <div className="flex flex-col gap-2">
+                  <a href="tel:+918143947374" className="text-xl font-medium text-white hover:text-[#d4af37] transition-colors" style={{ color: '#FFFFFF' }}>
+                    81439 47374
+                  </a>
+                  <a href="tel:+919700521522" className="text-xl font-medium text-white hover:text-[#d4af37] transition-colors" style={{ color: '#FFFFFF' }}>
+                    97005 21522
+                  </a>
+                </div>
               </div>
               <div>
                 <h4 className="uppercase tracking-widest text-xs font-bold text-white mb-2" style={{ color: '#FFFFFF' }}>Email</h4>
@@ -115,14 +120,14 @@ export default function Contact() {
               <div>
                 <h4 className="uppercase tracking-widest text-xs font-bold text-white mb-2" style={{ color: '#FFFFFF' }}>WhatsApp</h4>
                 <a 
-                  href="https://wa.me/918143947374" 
+                  href="https://wa.me/919700521522" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="flex items-center gap-2 text-xl font-medium text-white hover:text-[#d4af37] transition-colors"
                   style={{ color: '#FFFFFF' }}
                 >
                   <FaWhatsapp className="text-[#d4af37] text-2xl" />
-                  +91 81439 47374
+                  +91 97005 21522
                 </a>
               </div>
               <div>
