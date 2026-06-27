@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FiRefreshCw } from 'react-icons/fi';
+import toast from 'react-hot-toast';
 import API from '../../api';
 
 interface Message {
@@ -20,18 +21,36 @@ export default function CustomerMessages() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
 
-  const fetchMessages = async (isRefresh = false) => {
-    if (isRefresh) setRefreshing(true);
-    else setLoading(true);
+  const fetchMessages = async () => {
+    setLoading(true);
     setError('');
     try {
       const { data } = await API.get('/messages');
       const extractedData = data?.data || data;
-      setMessages(Array.isArray(extractedData) ? extractedData : []);
+      const sorted = Array.isArray(extractedData)
+        ? [...extractedData].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        : [];
+      setMessages(sorted);
     } catch (err) {
       setError('Failed to load messages. Make sure the backend is running.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      const { data } = await API.get('/messages');
+      const extractedData = data?.data || data;
+      const sorted = Array.isArray(extractedData)
+        ? [...extractedData].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+        : [];
+      setMessages(sorted);
+      toast.success('Messages updated successfully.');
+    } catch (err) {
+      toast.error('Unable to refresh messages.');
+    } finally {
       setRefreshing(false);
     }
   };
@@ -63,12 +82,13 @@ export default function CustomerMessages() {
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-2xl font-bold text-[#d4af37]">Customer Messages</h3>
         <button 
-          onClick={() => fetchMessages(true)} 
+          onClick={handleRefresh} 
           disabled={refreshing}
-          className="bg-white/5 border border-white/10 hover:border-[#d4af37] text-white p-2.5 rounded-lg transition-colors flex items-center justify-center disabled:opacity-50"
+          className="bg-[#d4af37] text-black hover:opacity-90 px-4 py-2.5 rounded-lg font-semibold transition-opacity flex items-center gap-2 disabled:opacity-50"
           title="Refresh Inbox"
         >
-          <FiRefreshCw className={`text-white hover:text-[#d4af37] ${refreshing ? 'animate-spin' : ''}`} size={18} />
+          <FiRefreshCw className={`${refreshing ? 'animate-spin' : ''}`} size={18} />
+          <span>{refreshing ? "Refreshing..." : "Refresh"}</span>
         </button>
       </div>
       
