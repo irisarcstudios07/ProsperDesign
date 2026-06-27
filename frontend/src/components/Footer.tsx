@@ -10,7 +10,7 @@ export default function Footer() {
             <div className="text-2xl font-bold tracking-widest uppercase mb-6">
               Prosper<span className="text-[#d4af37]">.</span>
             </div>
-            <p className="text-gray-400 font-light leading-relaxed mb-8">
+            <p className="text-gray-200 font-light leading-relaxed mb-8">
               Crafting timeless spaces that elevate the human experience. Premium construction, interiors, and landscape design.
             </p>
             <div className="flex gap-4">
@@ -21,7 +21,7 @@ export default function Footer() {
           
           <div>
             <h4 className="uppercase tracking-widest font-bold mb-6 text-sm">Quick Links</h4>
-            <ul className="space-y-4 font-light text-gray-400">
+            <ul className="space-y-4 font-light text-gray-200">
               <li><a href="#home" className="hover:text-white transition-colors">Home</a></li>
               <li><a href="#about" className="hover:text-white transition-colors">About Us</a></li>
               <li><a href="#services" className="hover:text-white transition-colors">Services</a></li>
@@ -31,7 +31,7 @@ export default function Footer() {
           
           <div>
             <h4 className="uppercase tracking-widest font-bold mb-6 text-sm">Services</h4>
-            <ul className="space-y-4 font-light text-gray-400">
+            <ul className="space-y-4 font-light text-gray-200">
               <li><a href="#" className="hover:text-white transition-colors">Constructions</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Interior Design</a></li>
               <li><a href="#" className="hover:text-white transition-colors">Landscape</a></li>
@@ -42,7 +42,7 @@ export default function Footer() {
           
           <div>
             <h4 className="uppercase tracking-widest font-bold mb-6 text-sm">Contact Info</h4>
-            <ul className="space-y-4 font-light text-gray-400">
+            <ul className="space-y-4 font-light text-gray-200">
               <li>
                 81439 47374<br />
                 97005 21522
@@ -57,7 +57,7 @@ export default function Footer() {
           </div>
         </div>
         
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-light text-gray-500">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-sm font-light text-gray-300">
           <p>&copy; {new Date().getFullYear()} Prosper Design. All rights reserved.</p>
           <div className="flex gap-6">
             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>

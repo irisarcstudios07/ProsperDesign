@@ -70,14 +70,30 @@ export default function BookConsultation() {
     const fullServiceSelection = subService ? `${projectType} - ${subService}` : projectType;
 
     try {
-      await API.post('/messages', {
+      const bookingData = {
         name,
         phone,
         email,
         service: fullServiceSelection,
         message,
-        subject: `Consultation Booking: ${fullServiceSelection}`
-      });
+        subject: `Consultation Booking: ${fullServiceSelection}`,
+      };
+
+      // Fire MongoDB save AND Vercel email in parallel.
+      // If email fails but MongoDB succeeds, user still sees success.
+      const [mongoResult] = await Promise.allSettled([
+        API.post('/messages', bookingData),
+        fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(bookingData),
+        }),
+      ]);
+
+      if (mongoResult.status === 'rejected') {
+        throw mongoResult.reason;
+      }
+
       setSuccess(true);
       setName('');
       setPhone('');
@@ -92,7 +108,7 @@ export default function BookConsultation() {
       setError(
         err.response?.data?.message ||
         err.message ||
-        "Unknown Error"
+        'Unknown Error'
       );
     } finally {
       setLoading(false);

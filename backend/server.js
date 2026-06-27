@@ -136,6 +136,7 @@ app.use('/api/services', require('./routes/serviceRoutes'));
 app.use('/api/messages', require('./routes/messageRoutes'));
 app.use('/api/settings', require('./routes/settingRoutes'));
 app.use('/api/clients', require('./routes/clientRoutes'));
+app.use('/api/testimonials', require('./routes/testimonialRoutes'));
 
 // Global Error Handler
 app.use(errorHandler);

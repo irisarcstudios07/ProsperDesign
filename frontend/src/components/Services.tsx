@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import API from '../api';
 import { servicesConfig } from '../servicesConfig';
@@ -53,6 +53,7 @@ const mapStaticToDbFormat = (): Service[] => {
 export default function Services() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const sectionRef = useRef<HTMLElement>(null);
 
   // Navigation state
   const [level, setLevel] = useState<Level>('parents');
@@ -121,44 +122,49 @@ export default function Services() {
   }
 
   return (
-    <section id="services" className="py-24 md:py-32 bg-[#2A3F5C] text-white overflow-hidden">
-      <div className="container mx-auto px-6 md:px-12">
-
-        {/* Section Header */}
-        <div className="max-w-2xl mb-16">
+    <section ref={sectionRef} id="services" className="bg-[#2A3F5C] text-white relative">
+      {/* Section Header — visible above the pinned scroll area */}
+      <div className="container mx-auto px-6 md:px-12 py-16 md:py-24 lg:hidden">
+        <div className="max-w-2xl">
           <h3 className="text-[#d4af37] uppercase tracking-widest text-sm font-bold mb-4">Our Expertise</h3>
           <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-wider mb-6">Services</h2>
           <p className="text-gray-300 font-light text-lg">
             Explore our curated, luxury portfolio of custom craftsmanship.
           </p>
         </div>
+      </div>
 
-        <AnimatePresence mode="wait">
-          {level === 'parents' && (
-            <ParentGrid
-              parents={services}
-              onSelect={handleParentSelect}
-            />
-          )}
+      <AnimatePresence mode="wait">
+        {level === 'parents' && (
+          <ParentGrid
+            parents={services}
+            onSelect={handleParentSelect}
+            sectionRef={sectionRef}
+            cardWidth={900}
+            gap={60}
+          />
+        )}
 
-          {level === 'children' && selectedParent && (
+        {level === 'children' && selectedParent && (
+          <div className="container mx-auto px-6 md:px-12">
             <ChildGrid
               parent={selectedParent}
               onBack={handleBackToParents}
               onSelect={handleChildSelect}
             />
-          )}
+          </div>
+        )}
 
-          {level === 'detail' && selectedParent && selectedChild && (
+        {level === 'detail' && selectedParent && selectedChild && (
+          <div className="container mx-auto px-6 md:px-12">
             <ServiceDetail
               parent={selectedParent}
               child={selectedChild}
               onBack={handleBackToChildren}
             />
-          )}
-        </AnimatePresence>
-
-      </div>
+          </div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

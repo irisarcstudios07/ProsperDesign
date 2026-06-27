@@ -5,6 +5,7 @@ import ManageServices from '../components/admin/ManageServices';
 import CustomerMessages from '../components/admin/CustomerMessages';
 import AdminSettings from '../components/admin/AdminSettings';
 import ManageClients from '../components/admin/ManageClients';
+import ManageTestimonials from '../components/admin/ManageTestimonials';
 import API, { getBackendUrl } from '../api';
 
 interface Message {
@@ -224,6 +225,8 @@ export default function AdminDashboard() {
         return <ManageServices />;
       case 'clients':
         return <ManageClients />;
+      case 'testimonials':
+        return <ManageTestimonials />;
       case 'messages':
         return <CustomerMessages />;
       case 'settings':
@@ -243,8 +246,9 @@ export default function AdminDashboard() {
             { id: 'dashboard', label: 'Dashboard' },
             { id: 'projects', label: 'Projects' },
             { id: 'services', label: 'Services' },
-            { id: 'clients', label: 'Clients' },
-            { id: 'messages', label: 'Messages' },
+            { id: 'clients',       label: 'Clients' },
+            { id: 'testimonials',  label: 'Testimonials' },
+            { id: 'messages',      label: 'Messages' },
             { id: 'settings', label: 'Settings' }
           ].map((tab) => (
             <button

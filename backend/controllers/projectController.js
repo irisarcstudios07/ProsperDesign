@@ -5,19 +5,31 @@ const { uploadImage, uploadVideo } = require('../services/cloudinaryService');
 // @desc    Get all projects
 // @route   GET /api/projects
 const getProjects = asyncHandler(async (req, res) => {
-  const projects = await Project.find().sort({ createdAt: -1 });
+  const rawProjects = await Project.find().sort({ createdAt: -1 });
+  const projects = rawProjects.map((p) => {
+    const obj = p.toObject();
+    const cover = obj.coverImage || obj.thumbnail || '';
+    const gallery = (obj.galleryImages && obj.galleryImages.length > 0) ? obj.galleryImages : (obj.images || []);
+    return {
+      ...obj,
+      coverImage: cover,
+      thumbnail: cover,
+      galleryImages: gallery,
+      images: gallery
+    };
+  });
   res.json({ success: true, message: 'Projects fetched successfully', data: projects });
 });
 
 // @desc    Create a project
 // @route   POST /api/projects
 const createProject = asyncHandler(async (req, res) => {
-  const { title, description, category, featured, visibility, urlImages } = req.body;
+  const { title, description, category, featured, visibility, urlImages, location, area, completion, materials } = req.body;
   
-  let thumbnail = '';
-  if (req.files && req.files['thumbnail']) {
-    const localPath = req.files['thumbnail'][0].path;
-    thumbnail = await uploadImage(localPath, 'prosper_design/projects/thumbnails');
+  let coverImage = '';
+  if (req.files && (req.files['coverImage'] || req.files['thumbnail'])) {
+    const fileObj = (req.files['coverImage'] && req.files['coverImage'][0]) || (req.files['thumbnail'] && req.files['thumbnail'][0]);
+    coverImage = await uploadImage(fileObj.path, 'prosper_design/projects/thumbnails');
   }
     
   let video = '';
@@ -26,17 +38,30 @@ const createProject = asyncHandler(async (req, res) => {
     video = await uploadVideo(localPath, 'prosper_design/projects/videos');
   }
   
-  const images = urlImages ? JSON.parse(urlImages) : [];
+  let galleryImages = urlImages ? JSON.parse(urlImages) : [];
+  if (req.files && (req.files['galleryImages'] || req.files['images'])) {
+    const uploadedFiles = [...(req.files['galleryImages'] || []), ...(req.files['images'] || [])];
+    for (const file of uploadedFiles) {
+      const url = await uploadImage(file.path, 'prosper_design/projects/gallery');
+      if (url) galleryImages.push(url);
+    }
+  }
 
   const newProject = new Project({
     title,
     description,
     category,
-    thumbnail,
+    thumbnail: coverImage,
+    coverImage,
     video,
-    images,
-    featured: featured === 'true',
-    visibility: visibility !== 'false'
+    images: galleryImages,
+    galleryImages,
+    location: location || '',
+    area: area || '',
+    completion: completion || '',
+    materials: materials || '',
+    featured: featured === 'true' || featured === true,
+    visibility: visibility !== 'false' && visibility !== false
   });
 
   const savedProject = await newProject.save();
@@ -51,22 +76,34 @@ const updateProject = asyncHandler(async (req, res) => {
     return res.status(404).json({ success: false, message: 'Project not found' });
   }
 
-  const { title, description, category, featured, visibility, urlImages } = req.body;
+  const { title, description, category, featured, visibility, urlImages, galleryImagesJson, location, area, completion, materials } = req.body;
   
-  project.title = title || project.title;
-  project.description = description || project.description;
-  project.category = category || project.category;
-  project.featured = featured !== undefined ? featured === 'true' : project.featured;
-  project.visibility = visibility !== undefined ? visibility === 'true' : project.visibility;
+  if (title !== undefined) project.title = title;
+  if (description !== undefined) project.description = description;
+  if (category !== undefined) project.category = category;
+  if (location !== undefined) project.location = location;
+  if (area !== undefined) project.area = area;
+  if (completion !== undefined) project.completion = completion;
+  if (materials !== undefined) project.materials = materials;
+
+  project.featured = featured !== undefined ? (featured === 'true' || featured === true) : project.featured;
+  project.visibility = visibility !== undefined ? (visibility === 'true' || visibility === true) : project.visibility;
   
-  if (urlImages) {
-    project.images = JSON.parse(urlImages);
+  let currentGallery = project.galleryImages && project.galleryImages.length > 0 ? [...project.galleryImages] : [...(project.images || [])];
+
+  if (galleryImagesJson) {
+    currentGallery = JSON.parse(galleryImagesJson);
+  } else if (urlImages) {
+    currentGallery = JSON.parse(urlImages);
   }
 
-  if (req.files && req.files['thumbnail']) {
-    const localPath = req.files['thumbnail'][0].path;
-    const secureUrl = await uploadImage(localPath, 'prosper_design/projects/thumbnails');
-    if (secureUrl) project.thumbnail = secureUrl;
+  if (req.files && (req.files['coverImage'] || req.files['thumbnail'])) {
+    const fileObj = (req.files['coverImage'] && req.files['coverImage'][0]) || (req.files['thumbnail'] && req.files['thumbnail'][0]);
+    const secureUrl = await uploadImage(fileObj.path, 'prosper_design/projects/thumbnails');
+    if (secureUrl) {
+      project.coverImage = secureUrl;
+      project.thumbnail = secureUrl;
+    }
   }
   
   if (req.files && req.files['video']) {
@@ -74,6 +111,17 @@ const updateProject = asyncHandler(async (req, res) => {
     const secureUrl = await uploadVideo(localPath, 'prosper_design/projects/videos');
     if (secureUrl) project.video = secureUrl;
   }
+
+  if (req.files && (req.files['galleryImages'] || req.files['images'])) {
+    const uploadedFiles = [...(req.files['galleryImages'] || []), ...(req.files['images'] || [])];
+    for (const file of uploadedFiles) {
+      const url = await uploadImage(file.path, 'prosper_design/projects/gallery');
+      if (url) currentGallery.push(url);
+    }
+  }
+
+  project.galleryImages = currentGallery;
+  project.images = currentGallery;
 
   const updatedProject = await project.save();
   res.json({ success: true, message: 'Project updated successfully', data: updatedProject });
@@ -97,3 +145,4 @@ module.exports = {
   updateProject,
   deleteProject
 };
+

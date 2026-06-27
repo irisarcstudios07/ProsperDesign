@@ -23,6 +23,27 @@ export interface Service {
   updatedAt?: string;
 }
 
+export interface Project {
+  _id: string;
+  title: string;
+  category: string;
+  description: string;
+  thumbnail?: string;
+  coverImage?: string;
+  video?: string;
+  images?: string[];
+  galleryImages?: string[];
+  location?: string;
+  area?: string;
+  completion?: string;
+  materials?: string;
+  year?: string;
+  services?: string[];
+  featured?: boolean;
+  visibility?: boolean;
+  createdAt?: string;
+}
+
 export interface Client {
   _id: string;
   name: string;
@@ -30,3 +51,4 @@ export interface Client {
   active: boolean;
   createdAt?: string;
 }
+

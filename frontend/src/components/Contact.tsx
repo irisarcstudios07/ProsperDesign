@@ -47,13 +47,24 @@ export default function Contact() {
 
     setLoading(true);
     try {
-      await API.post('/messages', {
-        name,
-        email,
-        phone,
-        subject,
-        message
-      });
+      const formData = { name, email, phone, subject, message };
+
+      // Fire MongoDB save AND Vercel email in parallel.
+      // Promise.allSettled means a failed email never blocks the success message
+      // as long as MongoDB saved correctly.
+      const [mongoResult] = await Promise.allSettled([
+        API.post('/messages', formData),
+        fetch('/api/send-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        }),
+      ]);
+
+      if (mongoResult.status === 'rejected') {
+        throw mongoResult.reason;
+      }
+
       setSuccess(true);
       setName('');
       setEmail('');
@@ -65,7 +76,7 @@ export default function Contact() {
       setError(
         err.response?.data?.message ||
         err.message ||
-        "Unknown Error"
+        'Unknown Error'
       );
     } finally {
       setLoading(false);
@@ -80,9 +91,9 @@ export default function Contact() {
           {/* Contact Details */}
           <div className="w-full lg:w-1/3 space-y-10">
             <div>
-              <h3 className="text-[#d4af37] uppercase tracking-widest text-sm font-bold mb-4">Get In Touch</h3>
-              <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-widest mb-10 text-white" style={{ color: '#FFFFFF' }}>
-                Contact Prosper Design
+              <h3 className="text-[#d4af37] uppercase tracking-widest text-sm font-bold mb-4">Contact</h3>
+              <h2 className="text-4xl md:text-5xl font-bold uppercase tracking-widest mb-10 text-[#d4af37]">
+                RAM BABU MIRYALA
               </h2>
             </div>
             
